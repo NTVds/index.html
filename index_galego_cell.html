@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel Galego Cell</title>
+  <link rel="icon" href="https://i.imgur.com/9s68dRX.png" />
+  <style>
+    body {
+      background-color: #000;
+      color: gold;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header img {
+      height: 40px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid gold;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #111;
+    }
+    input {
+      margin-bottom: 10px;
+      padding: 8px;
+      width: 100%;
+      max-width: 300px;
+      border: 1px solid gold;
+      background: #000;
+      color: gold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://i.imgur.com/9s68dRX.png" alt="Logo Galego Cell">
+    <h1>Painel Galego Cell</h1>
+  </header>
+
+  <input type="text" id="search" placeholder="Buscar modelo, marca ou código..." onkeyup="filterTable()"/>
+
+  <table id="painel">
+    <thead>
+      <tr>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Película</th>
+        <th>Código</th>
+        <th>Observações</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbw5PVsI_1TRGUtzKUEW_SGPhdJQxaL70GykQ2OjVrnoDTwstjoN2Mcz6LVIsDfbXLnROw/exec";
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector("#painel tbody");
+        data.forEach(row => {
+          const tr = document.createElement("tr");
+          row.forEach(cell => {
+            const td = document.createElement("td");
+            td.textContent = cell;
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+      });
+
+    function filterTable() {
+      const input = document.getElementById("search").value.toLowerCase();
+      const rows = document.querySelectorAll("#painel tbody tr");
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+  </script>
+</body>
+</html>
