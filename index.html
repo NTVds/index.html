@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assistência Técnica - Galego Cell</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #000;
+      color: #f1c40f;
+    }
+    header {
+      background: #111;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      border-bottom: 2px solid #f1c40f;
+    }
+    header img {
+      height: 60px;
+    }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #f1c40f;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    nav a:hover {
+      color: #fff;
+    }
+    main {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #111;
+      border: 1px solid #f1c40f;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #f1c40f;
+    }
+    .card p {
+      color: #ccc;
+      font-size: 15px;
+    }
+    footer {
+      background: #111;
+      text-align: center;
+      padding: 15px;
+      border-top: 2px solid #f1c40f;
+      font-size: 14px;
+    }
+    /* Botões */
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: #f1c40f;
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #fff;
+      color: #000;
+    }
+    /* Comprovante */
+    .comprovante {
+      margin-top: 20px;
+      padding: 20px;
+      border: 2px dashed #f1c40f;
+      border-radius: 10px;
+      background: url('https://i.imgur.com/DgLmg9r.png') center no-repeat;
+      background-size: contain;
+      opacity: 0.95;
+    }
+    .comprovante h3 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://i.imgur.com/DgLmg9r.png" alt="Logo Galego Cell">
+    <nav>
+      <a href="#os">Ordem de Serviço</a>
+      <a href="#produtos">Produtos</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#comprovante">Comprovante</a>
+    </nav>
+  </header>  <main>
+    <div class="card" id="os">
+      <h2>📋 Ordem de Serviço</h2>
+      <p>Crie, edite e acompanhe ordens de serviço em tempo real.</p>
+      <a href="#" class="btn">Abrir OS</a>
+    </div><div class="card" id="produtos">
+  <h2>📦 Controle de Produtos</h2>
+  <p>Adicione, edite e controle seu estoque com facilidade.</p>
+  <a href="#" class="btn">Gerenciar Produtos</a>
+</div>
+
+<div class="card" id="servicos">
+  <h2>🛠 Serviços</h2>
+  <p>Cadastro e gerenciamento de serviços prestados pela assistência técnica.</p>
+  <a href="#" class="btn">Ver Serviços</a>
+</div>
+
+<div class="card" id="comprovante">
+  <h2>🧾 Comprovantes</h2>
+  <p>Geração de comprovantes com marca d'água personalizada e logomarca.</p>
+  <div class="comprovante">
+    <h3>Comprovante de Exemplo</h3>
+    <p><strong>Cliente:</strong> João da Silva</p>
+    <p><strong>Serviço:</strong> Troca de tela</p>
+    <p><strong>Valor:</strong> R$ 250,00</p>
+  </div>
+</div>
+
+  </main>  <footer>
+    &copy; 2025 Galego Cell - Assistência Técnica. Todos os direitos reservados.
+  </footer>
+</body>
+</html>
