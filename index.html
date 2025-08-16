@@ -1,96 +1,622 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel Galego Cell</title>
-  <link rel="icon" href="https://i.imgur.com/9s68dRX.png" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Assistência Técnica Galego Cell • Painel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
-    body {
-      background-color: #000;
-      color: gold;
-      font-family: Arial, sans-serif;
-      padding: 20px;
+    :root {
+      --gold: #d4af37; /* dourado elegante */
+      --gold-2: #b9922c; /* hover */
+      --black: #0b0b0d;
+      --card: #131318;
+      --muted: #9aa2ad;
+      --ok: #1db954;
+      --danger: #ff4d4d;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
     }
-    header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    header img {
-      height: 40px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid gold;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #111;
-    }
-    input {
-      margin-bottom: 10px;
-      padding: 8px;
-      width: 100%;
-      max-width: 300px;
-      border: 1px solid gold;
-      background: #000;
-      color: gold;
-    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1200px 800px at 10% -10%,#1b1b23 0%, #0f1014 45%, #0b0b0d 100%);color:#e9edf2}
+    a{color:var(--gold)}
+    .wrap{max-width:1150px;margin:0 auto;padding:24px}
+    header{display:flex;align-items:center;gap:16px;padding:12px 0 20px}
+    header img{width:48px;height:48px;border-radius:12px;object-fit:contain;background:#000;padding:4px;border:1px solid #2a2a30}
+    h1{font-size: clamp(20px, 4vw, 28px); margin:0; font-weight:800; letter-spacing:.2px}
+    .subtitle{color:var(--muted);font-weight:400}.quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0}
+.action{
+  background:linear-gradient(180deg, #1a1b21, #111119);
+  border:1px solid #22232c;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);cursor:pointer;transition:.2s transform,.2s border-color
+}
+.action:hover{transform:translateY(-2px);border-color:#313241}
+.icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#0a0b0f;border:1px solid #2a2b36}
+.action .title{font-weight:700}
+.action .desc{font-size:12px;color:var(--muted)}
+
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.btn{appearance:none;border:none;background:var(--gold);color:#0c0c0f;font-weight:800;padding:11px 14px;border-radius:12px;cursor:pointer;box-shadow:var(--shadow);transition:.2s background,.2s transform}
+.btn:hover{background:var(--gold-2);transform:translateY(-1px)}
+.btn.secondary{background:#181922;color:#e9edf2;border:1px solid #2a2b36}
+.btn.danger{background:var(--danger);color:#fff}
+
+.panel{background:#0e0f14;border:1px solid #2a2b36;padding:18px;border-radius:18px;box-shadow:var(--shadow);margin-top:16px}
+.panel h2{margin:0 0 10px;font-size:18px}
+.panel .muted{color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{background:linear-gradient(180deg,#161721,#10111a);border:1px solid #2a2b36;border-radius:16px;padding:14px}
+.card h3{margin:0 0 8px}
+.row{display:flex;gap:10px}
+input,select,textarea{width:100%;background:#0b0c11;border:1px solid #282a36;color:#e9edf2;outline:none;border-radius:12px;padding:10px 12px}
+textarea{min-height:80px}
+label{display:block;margin-bottom:6px;font-size:12px;color:#c7ccd6}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px;border-bottom:1px solid #222430}
+th{color:#cbd3de;text-align:left}
+tr:hover td{background:#10121a}
+
+footer{margin:24px 0;color:#808694;font-size:12px}
+
+/* PRINT AREA */
+@media print{
+  body{background:#fff;color:#000}
+  .no-print{display:none!important}
+  .printable{display:block!important}
+}
+.printable{display:none; background:#fff; color:#111; padding:24px;}
+.receipt, .os-doc{max-width:820px;margin:0 auto;position:relative}
+.watermark{position:absolute;inset:0;opacity:.07;background:url('https://i.imgur.com/DgLmg9r.png') center/60% no-repeat;z-index:0;pointer-events:none;filter:grayscale(100%)}
+.doc-body{position:relative;z-index:2}
+.doc-header{display:flex;align-items:center;gap:12px;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:10px}
+.doc-header img{width:56px;height:56px}
+.doc-title{font-size:20px;font-weight:800}
+.doc-meta{font-size:12px;color:#333}
+.doc-table{width:100%;border-collapse:collapse;margin-top:8px}
+.doc-table th,.doc-table td{border:1px solid #ddd;padding:8px;font-size:12px}
+.doc-footer{margin-top:14px;font-size:12px;color:#333}
+
   </style>
 </head>
 <body>
-  <header>
-    <img src="https://i.imgur.com/9s68dRX.png" alt="Logo Galego Cell">
-    <h1>Painel Galego Cell</h1>
-  </header>
+  <div class="wrap">
+    <header class="no-print">
+      <img src="https://i.imgur.com/DgLmg9r.png" alt="Logo Galego Cell" />
+      <div>
+        <h1>Assistência Técnica <span style="color:var(--gold)">Galego Cell</span></h1>
+        <div class="subtitle">Painel de gestão — Vendas, Compras/Estoque, Ordem de Serviço, Financeiro e Relatórios</div>
+      </div>
+    </header><!-- Atalhos estilo MercadoPhone -->
+<section class="quick-actions no-print" id="shortcuts">
+  <div class="action" onclick="openTab('vendas')">
+    <div class="icon">💳</div>
+    <div>
+      <div class="title">Vendas</div>
+      <div class="desc">Registrar venda e imprimir comprovante</div>
+    </div>
+  </div>
+  <div class="action" onclick="openTab('estoque')">
+    <div class="icon">📦</div>
+    <div>
+      <div class="title">Compras / Estoque</div>
+      <div class="desc">Entrada de produtos e controle</div>
+    </div>
+  </div>
+  <div class="action" onclick="openTab('os')">
+    <div class="icon">🛠️</div>
+    <div>
+      <div class="title">Ordem de Serviço</div>
+      <div class="desc">Abrir OS de conserto e imprimir</div>
+    </div>
+  </div>
+  <div class="action" onclick="openTab('financeiro')">
+    <div class="icon">💰</div>
+    <div>
+      <div class="title">Financeiro</div>
+      <div class="desc">Resumo de caixa (simplificado)</div>
+    </div>
+  </div>
+  <div class="action" onclick="openTab('relatorios')">
+    <div class="icon">📊</div>
+    <div>
+      <div class="title">Relatórios</div>
+      <div class="desc">Exportar CSV (vendas, OS, estoque)</div>
+    </div>
+  </div>
+  <div class="action" onclick="openTab('config')">
+    <div class="icon">⚙️</div>
+    <div>
+      <div class="title">Configurações</div>
+      <div class="desc">Dados da loja e preferências</div>
+    </div>
+  </div>
+</section>
 
-  <input type="text" id="search" placeholder="Buscar modelo, marca ou código..." onkeyup="filterTable()"/>
+<!-- VENDAS -->
+<section id="vendas" class="panel no-print" hidden>
+  <h2>Vendas</h2>
+  <div class="muted">Adicione itens, cliente e formas de pagamento. Gere e imprima o comprovante com marca d’água da sua logo.</div>
+  <div class="grid" style="margin-top:8px">
+    <div class="card">
+      <h3>Novo item</h3>
+      <div class="row">
+        <div style="flex:2">
+          <label>Produto</label>
+          <input id="v-produto" placeholder="Ex.: Película 3D iPhone" />
+        </div>
+        <div>
+          <label>Qtd</label>
+          <input id="v-qtd" type="number" step="1" min="1" value="1"/>
+        </div>
+        <div>
+          <label>Preço (R$)</label>
+          <input id="v-preco" type="number" step="0.01" min="0"/>
+        </div>
+      </div>
+      <div class="bar" style="margin-top:10px">
+        <button class="btn" onclick="addItemVenda()">Adicionar</button>
+        <button class="btn secondary" onclick="limparCarrinho()">Limpar</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Cliente</h3>
+      <label>Nome</label>
+      <input id="v-cli" placeholder="Cliente (opcional)"/>
+      <label>Observações</label>
+      <textarea id="v-obs" placeholder="Alguma observação no comprovante"></textarea>
+    </div>
+    <div class="card">
+      <h3>Pagamento</h3>
+      <label>Forma</label>
+      <select id="v-pag">
+        <option>Dinheiro</option>
+        <option>Crédito</option>
+        <option>Débito</option>
+        <option>Pix</option>
+      </select>
+      <label>Desconto (R$)</label>
+      <input id="v-desc" type="number" step="0.01" min="0" value="0" />
+      <div class="bar" style="margin-top:10px">
+        <button class="btn" onclick="finalizarVenda()">Finalizar & Imprimir</button>
+      </div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <h3>Carrinho</h3>
+      <table>
+        <thead>
+          <tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Total</th><th></th></tr>
+        </thead>
+        <tbody id="v-carrinho"></tbody>
+        <tfoot>
+          <tr><td colspan="3" style="text-align:right;color:#cbd3de">Subtotal</td><td id="v-subtotal">R$ 0,00</td><td></td></tr>
+          <tr><td colspan="3" style="text-align:right;color:#cbd3de">Desconto</td><td id="v-desconto">R$ 0,00</td><td></td></tr>
+          <tr><td colspan="3" style="text-align:right;font-weight:800">Total</td><td id="v-total" style="font-weight:800">R$ 0,00</td><td></td></tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</section>
 
-  <table id="painel">
-    <thead>
-      <tr>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Película</th>
-        <th>Código</th>
-        <th>Observações</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<!-- ESTOQUE -->
+<section id="estoque" class="panel no-print" hidden>
+  <h2>Compras / Estoque</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Entrada de produto</h3>
+      <label>Descrição</label>
+      <input id="e-desc" placeholder="Ex.: Película 3D iPhone 11"/>
+      <div class="row">
+        <div>
+          <label>Quantidade</label>
+          <input id="e-qtd" type="number" min="1" value="1"/>
+        </div>
+        <div>
+          <label>Custo unitário (R$)</label>
+          <input id="e-custo" type="number" step="0.01" min="0"/>
+        </div>
+        <div>
+          <label>Preço venda sugerido (R$)</label>
+          <input id="e-preco" type="number" step="0.01" min="0"/>
+        </div>
+      </div>
+      <div class="bar" style="margin-top:10px">
+        <button class="btn" onclick="addEstoque()">Adicionar ao estoque</button>
+      </div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <h3>Lista de produtos</h3>
+      <table>
+        <thead><tr><th>Produto</th><th>Qtd</th><th>Custo</th><th>Preço</th><th></th></tr></thead>
+        <tbody id="e-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
 
-  <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbw5PVsI_1TRGUtzKUEW_SGPhdJQxaL70GykQ2OjVrnoDTwstjoN2Mcz6LVIsDfbXLnROw/exec";
+<!-- ORDEM DE SERVIÇO -->
+<section id="os" class="panel no-print" hidden>
+  <h2>Ordem de Serviço</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Abertura de OS</h3>
+      <label>Cliente</label>
+      <input id="os-cliente" placeholder="Nome do cliente"/>
+      <div class="row">
+        <div>
+          <label>Aparelho / Modelo</label>
+          <input id="os-modelo" placeholder="Ex.: Samsung A12"/>
+        </div>
+        <div>
+          <label>IMEI/Serial (opcional)</label>
+          <input id="os-imei" placeholder="IMEI ou Serial"/>
+        </div>
+      </div>
+      <label>Defeito relatado</label>
+      <textarea id="os-defeito" placeholder="Ex.: Não liga, troca de tela, conector, etc."></textarea>
+      <label>Observações / Senha / Acessórios recebidos</label>
+      <textarea id="os-obs" placeholder="Ex.: Senha 1234, capa, chip, cartão, etc."></textarea>
+      <div class="row">
+        <div>
+          <label>Valor estimado (R$)</label>
+          <input id="os-valor" type="number" step="0.01" min="0"/>
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="os-status">
+            <option>Recebido</option>
+            <option>Em análise</option>
+            <option>Aprovado</option>
+            <option>Em reparo</option>
+            <option>Finalizado</option>
+            <option>Entregue</option>
+          </select>
+        </div>
+      </div>
+      <div class="bar" style="margin-top:10px">
+        <button class="btn" onclick="abrirOS()">Salvar OS</button>
+        <button class="btn secondary" onclick="imprimirOSAtual()">Imprimir OS</button>
+      </div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <h3>OS recentes</h3>
+      <table>
+        <thead><tr><th>#</th><th>Cliente</th><th>Modelo</th><th>Status</th><th>Valor</th><th>Data</th><th></th></tr></thead>
+        <tbody id="os-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
 
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.querySelector("#painel tbody");
-        data.forEach(row => {
-          const tr = document.createElement("tr");
-          row.forEach(cell => {
-            const td = document.createElement("td");
-            td.textContent = cell;
-            tr.appendChild(td);
-          });
-          tbody.appendChild(tr);
-        });
-      });
+<!-- FINANCEIRO -->
+<section id="financeiro" class="panel no-print" hidden>
+  <h2>Financeiro</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Resumo</h3>
+      <div class="muted">Somatório simples com base em vendas e custo de compras.</div>
+      <div style="margin-top:8px">
+        <div>Vendas (R$): <strong id="fin-vendas">0,00</strong></div>
+        <div>Compras/Estoque (custo) (R$): <strong id="fin-compras">0,00</strong></div>
+        <div>Resultado (R$): <strong id="fin-resultado">0,00</strong></div>
+      </div>
+      <div class="bar" style="margin-top:10px">
+        <button class="btn secondary" onclick="atualizarFinanceiro()">Atualizar</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-    function filterTable() {
-      const input = document.getElementById("search").value.toLowerCase();
-      const rows = document.querySelectorAll("#painel tbody tr");
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(input) ? "" : "none";
-      });
+<!-- RELATÓRIOS -->
+<section id="relatorios" class="panel no-print" hidden>
+  <h2>Relatórios</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Exportar CSV</h3>
+      <div class="bar">
+        <button class="btn" onclick="exportCSV('vendas')">Vendas</button>
+        <button class="btn" onclick="exportCSV('estoque')">Estoque</button>
+        <button class="btn" onclick="exportCSV('os')">Ordens de Serviço</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIGURAÇÕES -->
+<section id="config" class="panel no-print" hidden>
+  <h2>Configurações da Loja</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Identidade</h3>
+      <label>Nome da loja</label>
+      <input id="cfg-nome" value="Assistência Técnica Galego Cell"/>
+      <label>Endereço/Contato para comprovantes</label>
+      <textarea id="cfg-contato" placeholder="Ex.: Rua X, 123 — WhatsApp (84) 98718-1612"></textarea>
+      <label>Observação padrão (comprovante/OS)</label>
+      <textarea id="cfg-msg" placeholder="Ex.: Garantia de 90 dias para serviços. Itens deixados por mais de 90 dias poderão ser descartados."></textarea>
+      <div class="bar" style="margin-top:10px">
+        <button class="btn" onclick="salvarConfig()">Salvar</button>
+        <button class="btn secondary" onclick="resetarTudo()">Resetar dados (local)</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ÁREA DE IMPRESSÃO: COMPROVANTE & OS (com marca d'água) -->
+<div id="print-area" class="printable">
+  <!-- COMPROVANTE -->
+  <div class="receipt" id="doc-receipt" hidden>
+    <div class="watermark"></div>
+    <div class="doc-body">
+      <div class="doc-header">
+        <img src="https://i.imgur.com/DgLmg9r.png"/>
+        <div>
+          <div class="doc-title" id="r-loja">Assistência Técnica Galego Cell</div>
+          <div class="doc-meta" id="r-contato">—</div>
+        </div>
+      </div>
+      <div style="font-size:13px;margin-bottom:6px">Comprovante de venda • <span id="r-data">—</span></div>
+      <table class="doc-table" id="r-tabela">
+        <thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Total</th></tr></thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr><th colspan="3" style="text-align:right">Subtotal</th><td id="r-sub">R$ 0,00</td></tr>
+          <tr><th colspan="3" style="text-align:right">Desconto</th><td id="r-desc">R$ 0,00</td></tr>
+          <tr><th colspan="3" style="text-align:right">Total</th><td id="r-tot" style="font-weight:800">R$ 0,00</td></tr>
+        </tfoot>
+      </table>
+      <div class="doc-footer">
+        <div>Cliente: <span id="r-cli">—</span> | Pagamento: <span id="r-pag">—</span></div>
+        <div>Obs.: <span id="r-obs">—</span></div>
+        <div style="margin-top:8px" id="r-msg">—</div>
+      </div>
+    </div>
+  </div>
+  <!-- OS -->
+  <div class="os-doc" id="doc-os" hidden>
+    <div class="watermark"></div>
+    <div class="doc-body">
+      <div class="doc-header">
+        <img src="https://i.imgur.com/DgLmg9r.png"/>
+        <div>
+          <div class="doc-title" id="o-loja">Assistência Técnica Galego Cell</div>
+          <div class="doc-meta" id="o-contato">—</div>
+        </div>
+      </div>
+      <div style="font-size:13px;margin-bottom:6px">Ordem de Serviço • Nº <span id="o-num">—</span> • <span id="o-data">—</span></div>
+      <table class="doc-table">
+        <tbody>
+          <tr><th>Cliente</th><td id="o-cliente">—</td></tr>
+          <tr><th>Modelo</th><td id="o-modelo">—</td></tr>
+          <tr><th>IMEI/Serial</th><td id="o-imei">—</td></tr>
+          <tr><th>Defeito</th><td id="o-defeito">—</td></tr>
+          <tr><th>Observações</th><td id="o-obs">—</td></tr>
+          <tr><th>Status</th><td id="o-status">—</td></tr>
+          <tr><th>Valor estimado</th><td id="o-valor">—</td></tr>
+        </tbody>
+      </table>
+      <div class="doc-footer" id="o-msg" style="margin-top:8px">—</div>
+    </div>
+  </div>
+</div>
+
+<footer class="no-print">
+  Feito com ❤ para <strong>Galego Cell</strong> — Protótipo local (dados ficam no seu navegador). Pronto para publicar no GitHub Pages.
+</footer>
+
+  </div><script>
+  // ====== STORAGE UTILS ======
+  const S = {
+    load(key, def){ try{ return JSON.parse(localStorage.getItem(key)) ?? def }catch(e){return def} },
+    save(key, val){ localStorage.setItem(key, JSON.stringify(val)) }
+  }
+  const fmt = v => (v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})
+  const nowStr = () => new Date().toLocaleString('pt-BR')
+
+  // ====== STATE ======
+  let carrinho = []
+  let loja = S.load('gc_cfg', { nome:'Assistência Técnica Galego Cell', contato:'', msg:'' })
+  let estoque = S.load('gc_estoque', [])
+  let vendas = S.load('gc_vendas', [])
+  let ordens = S.load('gc_os', [])
+
+  // ====== NAV ======
+  function openTab(id){
+    for(const s of document.querySelectorAll('.panel')) s.hidden = true
+    document.getElementById(id).hidden = false
+    if(id==='estoque') renderEstoque()
+    if(id==='os') renderOS()
+    if(id==='financeiro') atualizarFinanceiro()
+  }
+
+  // ====== VENDAS ======
+  function renderCarrinho(){
+    const tb = document.getElementById('v-carrinho'); tb.innerHTML=''
+    let subtotal = 0
+    carrinho.forEach((it,idx)=>{
+      const tr = document.createElement('tr')
+      const tot = it.qtd * it.preco; subtotal += tot
+      tr.innerHTML = `<td>${it.prod}</td><td>${it.qtd}</td><td>${fmt(it.preco)}</td><td>${fmt(tot)}</td><td><button class='btn danger' onclick='rem(${idx})'>×</button></td>`
+      tb.appendChild(tr)
+    })
+    const desc = parseFloat(document.getElementById('v-desc').value||0)
+    document.getElementById('v-subtotal').textContent = fmt(subtotal)
+    document.getElementById('v-desconto').textContent = fmt(desc)
+    document.getElementById('v-total').textContent = fmt(Math.max(subtotal - desc,0))
+  }
+  function rem(i){ carrinho.splice(i,1); renderCarrinho() }
+  function addItemVenda(){
+    const prod = document.getElementById('v-produto').value.trim()
+    const qtd = parseInt(document.getElementById('v-qtd').value||'1')
+    const preco = parseFloat(document.getElementById('v-preco').value||'0')
+    if(!prod||qtd<=0||preco<=0) return alert('Preencha produto, quantidade e preço.')
+    carrinho.push({prod,qtd,preco})
+    // baixa automática de estoque
+    const idx = estoque.findIndex(e=>e.desc.toLowerCase()===prod.toLowerCase())
+    if(idx>-1){ estoque[idx].qtd = Math.max(0, (parseInt(estoque[idx].qtd||0))-qtd); S.save('gc_estoque', estoque) }
+    document.getElementById('v-produto').value=''; document.getElementById('v-preco').value=''
+    renderCarrinho(); renderEstoque()
+  }
+  function limparCarrinho(){ carrinho=[]; renderCarrinho() }
+  function finalizarVenda(){
+    if(!carrinho.length) return alert('Adicione itens ao carrinho.')
+    const cli = document.getElementById('v-cli').value.trim()||'—'
+    const pag = document.getElementById('v-pag').value
+    const obs = document.getElementById('v-obs').value.trim()||'—'
+    const desc = parseFloat(document.getElementById('v-desc').value||0)
+    const subtotal = carrinho.reduce((s,i)=>s+i.qtd*i.preco,0)
+    const total = Math.max(subtotal - desc,0)
+    const venda = { id:Date.now(), data: nowStr(), itens:[...carrinho], cli, pag, obs, subtotal, desc, total }
+    vendas.unshift(venda); S.save('gc_vendas', vendas)
+    // preencher comprovante
+    docReceipt(venda)
+    // limpar
+    carrinho=[]; renderCarrinho();
+    window.print()
+  }
+  function docReceipt(v){
+    document.getElementById('doc-receipt').hidden=false
+    document.getElementById('doc-os').hidden=true
+    document.getElementById('r-loja').textContent = loja.nome
+    document.getElementById('r-contato').textContent = loja.contato||''
+    document.getElementById('r-data').textContent = v.data
+    document.getElementById('r-cli').textContent = v.cli
+    document.getElementById('r-pag').textContent = v.pag
+    document.getElementById('r-obs').textContent = v.obs
+    document.getElementById('r-msg').textContent = loja.msg||''
+    document.getElementById('r-sub').textContent = fmt(v.subtotal)
+    document.getElementById('r-desc').textContent = fmt(v.desc)
+    document.getElementById('r-tot').textContent = fmt(v.total)
+    const tb = document.querySelector('#r-tabela tbody'); tb.innerHTML=''
+    v.itens.forEach(i=>{
+      const tr = document.createElement('tr')
+      tr.innerHTML = `<td>${i.prod}</td><td>${i.qtd}</td><td>${fmt(i.preco)}</td><td>${fmt(i.qtd*i.preco)}</td>`
+      tb.appendChild(tr)
+    })
+  }
+
+  // ====== ESTOQUE ======
+  function addEstoque(){
+    const desc = document.getElementById('e-desc').value.trim()
+    const qtd = parseInt(document.getElementById('e-qtd').value||'1')
+    const custo = parseFloat(document.getElementById('e-custo').value||'0')
+    const preco = parseFloat(document.getElementById('e-preco').value||'0')
+    if(!desc||qtd<=0) return alert('Preencha a descrição e quantidade.')
+    const i = estoque.findIndex(e=>e.desc.toLowerCase()===desc.toLowerCase())
+    if(i>-1){ estoque[i].qtd += qtd; estoque[i].custo=custo; estoque[i].preco=preco }
+    else{ estoque.unshift({id:Date.now(),desc,qtd,custo,preco}) }
+    S.save('gc_estoque', estoque)
+    renderEstoque(); document.getElementById('e-desc').value=''
+  }
+  function renderEstoque(){
+    const tb = document.getElementById('e-tbody'); if(!tb) return; tb.innerHTML=''
+    estoque.forEach((e,idx)=>{
+      const tr = document.createElement('tr')
+      tr.innerHTML = `<td>${e.desc}</td><td>${e.qtd}</td><td>${fmt(e.custo||0)}</td><td>${fmt(e.preco||0)}</td><td><button class='btn danger' onclick='delProd(${idx})'>Excluir</button></td>`
+      tb.appendChild(tr)
+    })
+  }
+  function delProd(i){ if(confirm('Excluir produto do estoque?')){ estoque.splice(i,1); S.save('gc_estoque', estoque); renderEstoque() } }
+
+  // ====== OS ======
+  let lastOSId = S.load('gc_last_os', 0)
+  function abrirOS(){
+    const cliente = document.getElementById('os-cliente').value.trim()
+    const modelo = document.getElementById('os-modelo').value.trim()
+    const imei = document.getElementById('os-imei').value.trim()
+    const defeito = document.getElementById('os-defeito').value.trim()
+    const obs = document.getElementById('os-obs').value.trim()
+    const valor = parseFloat(document.getElementById('os-valor').value||'0')
+    const status = document.getElementById('os-status').value
+    if(!cliente||!modelo||!defeito) return alert('Preencha cliente, modelo e defeito.')
+    lastOSId++; S.save('gc_last_os', lastOSId)
+    const os = { id:lastOSId, data: nowStr(), cliente, modelo, imei, defeito, obs, valor, status }
+    ordens.unshift(os); S.save('gc_os', ordens)
+    renderOS();
+    preencherOS(os)
+    alert('OS salva! Agora você pode imprimir.')
+  }
+  function renderOS(){
+    const tb = document.getElementById('os-tbody'); if(!tb) return; tb.innerHTML=''
+    ordens.forEach((o,idx)=>{
+      const tr = document.createElement('tr')
+      tr.innerHTML = `<td>${o.id}</td><td>${o.cliente}</td><td>${o.modelo}</td><td>${o.status}</td><td>${fmt(o.valor||0)}</td><td>${o.data}</td><td><button class='btn' onclick='preencherOS(ordens[${idx}]); window.print()'>Imprimir</button></td>`
+      tb.appendChild(tr)
+    })
+  }
+  function imprimirOSAtual(){
+    if(!ordens.length) return alert('Nenhuma OS criada ainda.')
+    preencherOS(ordens[0]); window.print()
+  }
+  function preencherOS(o){
+    document.getElementById('doc-os').hidden=false
+    document.getElementById('doc-receipt').hidden=true
+    document.getElementById('o-loja').textContent = loja.nome
+    document.getElementById('o-contato').textContent = loja.contato||''
+    document.getElementById('o-num').textContent = o.id
+    document.getElementById('o-data').textContent = o.data
+    document.getElementById('o-cliente').textContent = o.cliente
+    document.getElementById('o-modelo').textContent = o.modelo
+    document.getElementById('o-imei').textContent = o.imei||'—'
+    document.getElementById('o-defeito').textContent = o.defeito
+    document.getElementById('o-obs').textContent = o.obs||'—'
+    document.getElementById('o-status').textContent = o.status
+    document.getElementById('o-valor').textContent = fmt(o.valor||0)
+    document.getElementById('o-msg').textContent = loja.msg||''
+  }
+
+  // ====== FINANCEIRO ======
+  function atualizarFinanceiro(){
+    const somaVendas = vendas.reduce((s,v)=>s+v.total,0)
+    const somaCompras = estoque.reduce((s,e)=>s+(e.custo||0)*(e.qtd||0),0)
+    document.getElementById('fin-vendas').textContent = somaVendas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})
+    document.getElementById('fin-compras').textContent = somaCompras.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})
+    const res = somaVendas - somaCompras
+    document.getElementById('fin-resultado').textContent = res.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})
+  }
+
+  // ====== RELATÓRIOS ======
+  function exportCSV(tipo){
+    let rows = []
+    if(tipo==='vendas'){
+      rows.push(['id','data','cliente','pagamento','subtotal','desconto','total','itens'])
+      vendas.forEach(v=>rows.push([v.id,v.data,v.cli,v.pag,v.subtotal,v.desc,v.total, v.itens.map(i=>`${i.qtd}x ${i.prod} (${i.preco})`).join(' | ')]))
+    } else if(tipo==='estoque'){
+      rows.push(['id','descricao','qtd','custo','preco'])
+      estoque.forEach(e=>rows.push([e.id||'',e.desc,e.qtd,e.custo,e.preco]))
+    } else if(tipo==='os'){
+      rows.push(['id','data','cliente','modelo','imei','defeito','obs','valor','status'])
+      ordens.forEach(o=>rows.push([o.id,o.data,o.cliente,o.modelo,o.imei,o.defeito,o.obs,o.valor,o.status]))
     }
-  </script>
-</body>
+    const csv = rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n')
+    const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'})
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `galegocell_${tipo}.csv`; a.click(); URL.revokeObjectURL(a.href)
+  }
+
+  // ====== CONFIG ======
+  function salvarConfig(){
+    loja = {
+      nome: document.getElementById('cfg-nome').value.trim()||'Assistência Técnica Galego Cell',
+      contato: document.getElementById('cfg-contato').value.trim(),
+      msg: document.getElementById('cfg-msg').value.trim()
+    }
+    S.save('gc_cfg', loja)
+    alert('Configurações salvas!')
+  }
+  function resetarTudo(){
+    if(confirm('Isso vai apagar os dados salvos localmente (vendas, OS e estoque). Deseja continuar?')){
+      localStorage.removeItem('gc_cfg'); localStorage.removeItem('gc_estoque'); localStorage.removeItem('gc_vendas'); localStorage.removeItem('gc_os'); localStorage.removeItem('gc_last_os');
+      loja = { nome:'Assistência Técnica Galego Cell', contato:'', msg:'' }
+      estoque = []; vendas = []; ordens = []; lastOSId=0
+      renderEstoque(); renderOS(); renderCarrinho(); atualizarFinanceiro()
+      alert('Dados limpos!')
+    }
+  }
+
+  // STARTUP
+  document.getElementById('cfg-contato').value = loja.contato||''
+  document.getElementById('cfg-msg').value = loja.msg||''
+  document.getElementById('cfg-nome').value = loja.nome||'Assistência Técnica Galego Cell'
+  renderEstoque(); renderOS(); renderCarrinho(); atualizarFinanceiro();
+</script></body>
 </html>
