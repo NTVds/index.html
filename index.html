@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galego Cell - Sistema Integrado</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Variáveis de cores e estilos globais */
+    :root {
+      --gold: #d4af37;
+      --gold-dark: #8b7500;
+      --gold-light: #f0e6d2;
+      --black: #0a0a0a;
+      --dark: #111;
+      --darker: #0e0f14;
+      --card: #1a1a1a;
+      --text: #f5f5f5;
+      --text-muted: #9aa2ad;
+      --success: #1db954;
+      --danger: #ff4d4d;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --border: 1px solid #2a2b36;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* Layout principal */
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--darker);
+      border-right: var(--border);
+      padding: 20px 0;
+    }
+
+    .logo {
+      text-align: center;
+      padding: 0 20px 20px;
+      border-bottom: var(--border);
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      max-width: 80px;
+      margin-bottom: 10px;
+    }
+
+    .logo h1 {
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold);
+      border-left: 3px solid var(--gold);
+    }
+
+    .nav-item i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Área de conteúdo */
+    .content {
+      padding: 20px;
+      background: var(--dark);
+      overflow-y: auto;
+      max-height: 100vh;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .page-title {
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--gold);
+      display: inline-block;
+    }
+
+    /* Cards e grids */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .action {
+      background: linear-gradient(180deg, #1a1b21, #111119);
+      border: var(--border);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: .2s transform, .2s border-color;
+    }
+
+    .action:hover {
+      transform: translateY(-2px);
+      border-color: #313241;
+    }
+
+    .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: #0a0b0f;
+      border: var(--border);
+    }
+
+    .action .title {
+      font-weight: 700;
+    }
+
+    .action .desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .card {
+      background: var(--card);
+      border: var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin-bottom: 15px;
+      color: var(--gold);
+      font-size: 1.2rem;
+    }
+
+    /* Formulários */
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--darker);
+      border: var(--border);
+      color: var(--text);
+      outline: none;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      background: var(--gold);
+      color: #0c0c0f;
+      font-weight: 800;
+      padding: 12px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: .2s background, .2s transform;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: var(--gold-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn i {
+      font-size: 0.9rem;
+    }
+
+    .btn-secondary {
+      background: #181922;
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    /* Tabelas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: var(--border);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    tr:hover td {
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* Documentos para impressão */
+    .printable {
+      display: none;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .printable, .printable * {
+        visibility: visible;
+      }
+      .printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+
+    /* Animações */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="https://i.imgur.com/DgLmg9r.png" alt="Galego Cell">
+        <h1>Galego Cell</h1>
+      </div>
+      <nav>
+        <a href="#" class="nav-item active" data-section="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+        <a href="#" class="nav-item" data-section="vendas"><i class="fas fa-cash-register"></i> Vendas (PDV)</a>
+        <a href="#" class="nav-item" data-section="estoque"><i class="fas fa-boxes"></i> Estoque</a>
+        <a href="#" class="nav-item" data-section="os"><i class="fas fa-tools"></i> Ordem de Serviço</a>
+        <a href="#" class="nav-item" data-section="financeiro"><i class="fas fa-chart-line"></i> Financeiro</a>
+        <a href="#" class="nav-item" data-section="relatorios"><i class="fas fa-file-csv"></i> Relatórios</a>
+        <a href="#" class="nav-item" data-section="config"><i class="fas fa-cog"></i> Configurações</a>
+      </nav>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="content">
+      <!-- Dashboard -->
+      <section id="dashboard" class="section active">
+        <h1 class="page-title">Dashboard</h1>
+        
+        <div class="quick-actions">
+          <div class="action" onclick="openSection('vendas')">
+            <div class="icon">💳</div>
+            <div>
+              <div class="title">Vendas</div>
+              <div class="desc">Registrar venda e imprimir comprovante</div>
+            </div>
+          </div>
+          <div class="action" onclick="openSection('estoque')">
+            <div class="icon">📦</div>
+            <div>
+              <div class="title">Compras / Estoque</div>
+              <div class="desc">Entrada de produtos e controle</div>
+            </div>
+          </div>
+          <div class="action" onclick="openSection('os')">
+            <div class="icon">🛠️</div>
+            <div>
+              <div class="title">Ordem de Serviço</div>
+              <div class="desc">Abrir OS de conserto e imprimir</div>
+            </div>
+          </div>
+          <div class="action" onclick="openSection('financeiro')">
+            <div class="icon">💰</div>
+            <div>
+              <div class="title">Financeiro</div>
+              <div class="desc">Resumo de caixa (simplificado)</div>
+            </div>
+          </div>
+          <div class="action" onclick="openSection('relatorios')">
+            <div class="icon">📊</div>
+            <div>
+              <div class="title">Relatórios</div>
+              <div class="desc">Exportar CSV (vendas, OS, estoque)</div>
+            </div>
+          </div>
+          <div class="action" onclick="openSection('config')">
+            <div class="icon">⚙️</div>
+            <div>
+              <div class="title">Configurações</div>
+              <div class="desc">Dados da loja e preferências</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Estatísticas</h3>
+            <p>Vendas do mês: <strong>R$ 8.450,00</strong></p>
+            <p>OS em andamento: <strong>12</strong></p>
+            <p>Produtos em estoque: <strong>87</strong></p>
+          </div>
+          <div class="card">
+            <h3>Atividades Recentes</h3>
+            <p>OS #124 - iPhone 12 (Troca de tela) <span class="badge">Finalizada</span></p>
+            <p>Venda - Película 3D <span class="badge">R$ 35,00</span></p>
+            <p>Entrada estoque - Cabos USB <span class="badge">50 unidades</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Vendas (PDV) -->
+      <section id="vendas" class="section">
+        <h1 class="page-title">Vendas (PDV)</h1>
+        
+        <div class="grid">
+          <div class="card">
+            <h3>Novo item</h3>
+            <label>Produto</label>
+            <input id="v-produto" placeholder="Ex.: Película 3D iPhone">
+            <div class="row">
+              <div>
+                <label>Qtd</label>
+                <input id="v-qtd" type="number" step="1" min="1" value="1">
+              </div>
+              <div>
+                <label>Preço (R$)</label>
+                <input id="v-preco" type="number" step="0.01" min="0">
+              </div>
+            </div>
+            <div class="bar">
+              <button class="btn" onclick="addItemVenda()">Adicionar</button>
+              <button class="btn btn-secondary" onclick="limparCarrinho()">Limpar</button>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3>Cliente</h3>
+            <label>Nome</label>
+            <input id="v-cli" placeholder="Cliente (opcional)">
+            <label>Observações</label>
+            <textarea id="v-obs" placeholder="Alguma observação no comprovante"></textarea>
+          </div>
+          
+          <div class="card">
+            <h3>Pagamento</h3>
+            <label>Forma</label>
+            <select id="v-pag">
+              <option>Dinheiro</option>
+              <option>Crédito</option>
+              <option>Débito</option>
+              <option>Pix</option>
+            </select>
+            <label>Desconto (R$)</label>
+            <input id="v-desc" type="number" step="0.01" min="0" value="0">
+            <div class="bar">
+              <button class="btn" onclick="finalizarVenda()">Finalizar & Imprimir</button>
+            </div>
+          </div>
+          
+          <div class="card" style="grid-column:1/-1">
+            <h3>Carrinho</h3>
+            <table>
+              <thead>
+                <tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Total</th><th></th></tr>
+              </thead>
+              <tbody id="v-carrinho"></tbody>
+              <tfoot>
+                <tr><td colspan="3" style="text-align:right;color:#cbd3de">Subtotal</td><td id="v-subtotal">R$ 0,00</td><td></td></tr>
+                <tr><td colspan="3" style="text-align:right;color:#cbd3de">Desconto</td><td id="v-desconto">R$ 0,00</td><td></td></tr>
+                <tr><td colspan="3" style="text-align:right;font-weight:800">Total</td><td id="v-total" style="font-weight:800">R$ 0,00</td><td></td></tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Estoque -->
+      <section id="estoque" class="section">
+        <h1 class="page-title">Compras / Estoque</h1>
+        
+        <div class="grid">
+          <div class="card">
+            <h3>Entrada de produto</h3>
+            <label>Descrição</label>
+            <input id="e-desc" placeholder="Ex.: Película 3D iPhone 11">
+            <div class="row">
+              <div>
+                <label>Quantidade</label>
+                <input id="e-qtd" type="number" min="1" value="1">
+              </div>
+              <div>
+                <label>Custo unitário (R$)</label>
+                <input id="e-custo" type="number" step="0.01" min="0">
+              </div>
+              <div>
+                <label>Preço venda sugerido (R$)</label>
+                <input id="e-preco" type="number" step="0.01" min="0">
+              </div>
+            </div>
+            <div class="bar">
+              <button class="btn" onclick="addEstoque()">Adicionar ao estoque</button>
+            </div>
+          </div>
+          
+          <div class="card" style="grid-column:1/-1">
+            <h3>Lista de produtos</h3>
+            <table>
+              <thead>
+                <tr><th>Produto</th><th>Qtd</th><th>Custo</th><th>Preço</th><th></th></tr>
+              </thead>
+              <tbody id="e-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ordem de Serviço -->
+      <section id="os" class="section">
+        <h1 class="page-title">Ordem de Serviço</h1>
+        
+        <div class="grid">
+          <div class="card">
+            <h3>Abertura de OS</h3>
+            <label>Cliente</label>
+            <input id="os-cliente" placeholder="Nome do cliente">
+            <div class="row">
+              <div>
+                <label>Aparelho / Modelo</label>
+                <input id="os-modelo" placeholder="Ex.: Samsung A12">
+              </div>
+              <div>
+                <label>IMEI/Serial (opcional)</label>
+                <input id="os-imei" placeholder="IMEI ou Serial">
+              </div>
+            </div>
+            <label>Defeito relatado</label>
+            <textarea id="os-defeito" placeholder="Ex.: Não liga, troca de tela, conector, etc."></textarea>
+            <label>Observações / Senha / Acessórios recebidos</label>
+            <textarea id="os-obs" placeholder="Ex.: Senha 1234, capa, chip, cartão, etc."></textarea>
+            <div class="row">
+              <div>
+                <label>Valor estimado (R$)</label>
+                <input id="os-valor" type="number" step="0.01" min="0">
+              </div>
+              <div>
+                <label>Status</label>
+                <select id="os-status">
+                  <option>Recebido</option>
+                  <option>Em análise</option>
+                  <option>Aprovado</option>
+                  <option>Em reparo</option>
+                  <option>Finalizado</option>
+                  <option>Entregue</option>
+                </select>
+              </div>
+            </div>
+            <div class="bar">
+              <button class="btn" onclick="abrirOS()">Salvar OS</button>
+              <button class="btn btn-secondary" onclick="imprimirOSAtual()">Imprimir OS</button>
+            </div>
+          </div>
+          
+          <div class="card" style="grid-column:1/-1">
+            <h3>OS recentes</h3>
+            <table>
+              <thead>
+                <tr><th>#</th><th>Cliente</th><th>Modelo</th><th>Status</th><th>Valor</th><th>Data</th><th></th></tr>
+              </thead>
+              <tbody id="os-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Financeiro -->
+      <section id="financeiro" class="section">
+        <h1 class="page-title">Financeiro</h1>
+        
+        <div class="grid">
+          <div class="card">
+            <h3>Resumo</h3>
+            <div class="muted">Somatório simples com base em vendas e custo de compras.</div>
+            <div style="margin-top:8px">
+              <div>Vendas (R$): <strong id="fin-vendas">0,00</strong></div>
+              <div>Compras/Estoque (custo) (R$): <strong id="fin-compras">0,00</strong></div>
+              <div>Resultado (R$): <strong id="fin-resultado">0,00</strong></div>
+            </div>
+            <div class="bar">
+              <button class="btn btn-secondary" onclick="atualizarFinanceiro()">Atualizar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Relatórios -->
+      <section id="relatorios" class="section">
+        <h1 class="page-title">Relatórios</h1>
+        
+        <div class="grid">
+          <div class="card">
+            <h3>Exportar CSV</h3>
+            <div class="bar">
+              <button class="btn" onclick="exportCSV('vendas')">Vendas</button>
+              <button class="btn" onclick="exportCSV('estoque')">Estoque</button>
+              <button class="btn" onclick="exportCSV('os')">Ordens de Serviço</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Configurações -->
+      <section id="config" class="section">
+        <h1 class="page-title">Configurações da Loja</h1>
+        
+        <div class="grid">
+          <div class="card">
+            <h3>Identidade</h3>
+            <label>Nome da loja</label>
+            <input id="cfg-nome" value="Assistência Técnica Galego Cell">
+            <label>Endereço/Contato para comprovantes</label>
+            <textarea id="cfg-contato" placeholder="Ex.: Rua X, 123 — WhatsApp (84) 98718-1612"></textarea>
+            <label>Observação padrão (comprovante/OS)</label>
+            <textarea id="cfg-msg" placeholder="Ex.: Garantia de 90 dias para serviços. Itens deixados por mais de 90 dias poderão ser descartados."></textarea>
+            <div class="bar">
+              <button class="btn" onclick="salvarConfig()">Salvar</button>
+              <button class="btn btn-danger" onclick="resetarTudo()">Resetar dados (local)</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Área de Impressão -->
+  <div class="printable" id="print-area">
+    <!-- Documentos serão renderizados aqui -->
+  </div>
+
+  <script>
+    // ====== NAVEGAÇÃO ======
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove a classe ativa de todos os itens
+        document.querySelectorAll('.nav-item').forEach(nav => {
+          nav.classList.remove('active');
+        });
+        
+        // Adiciona a classe ativa ao item clicado
+        this.classList.add('active');
+        
+        // Oculta todas as seções
+        document.querySelectorAll('.section').forEach(section => {
+          section.classList.remove('active');
+        });
+        
+        // Mostra a seção correspondente
+        const sectionId = this.getAttribute('data-section');
+        document.getElementById(sectionId).classList.add('active');
+      });
+    });
+
+    function openSection(sectionId) {
+      document.querySelectorAll('.nav-item').forEach(nav => {
+        nav.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    // ====== STORAGE UTILS ======
+    const S = {
+      load(key, def) {
+        try {
+          return JSON.parse(localStorage.getItem(key)) ?? def;
+        } catch(e) {
+          return def;
+        }
+      },
+      save(key, val) {
+        localStorage.setItem(key, JSON.stringify(val));
+      }
+    };
+    
+    const fmt = v => (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const nowStr = () => new Date().toLocaleString('pt-BR');
+    
+    // ====== STATE ======
+    let carrinho = [];
+    let loja = S.load('gc_cfg', {
+      nome: 'Assistência Técnica Galego Cell',
+      contato: '',
+      msg: ''
+    });
+    
+    let estoque = S.load('gc_estoque', []);
+    let vendas = S.load('gc_vendas', []);
+    let ordens = S.load('gc_os', []);
+    let lastOSId = S.load('gc_last_os', 0);
+    
+    // ====== VENDAS ======
+    function renderCarrinho() {
+      const tb = document.getElementById('v-carrinho');
+      tb.innerHTML = '';
+      let subtotal = 0;
+      
+      carrinho.forEach((it, idx) => {
+        const tr = document.createElement('tr');
+        const tot = it.qtd * it.preco;
+        subtotal += tot;
+        
+        tr.innerHTML = `
+          <td>${it.prod}</td>
+          <td>${it.qtd}</td>
+          <td>${fmt(it.preco)}</td>
+          <td>${fmt(tot)}</td>
+          <td><button class='btn btn-danger' onclick='rem(${idx})'>×</button></td>
+        `;
+        
+        tb.appendChild(tr);
+      });
+      
+      const desc = parseFloat(document.getElementById('v-desc').value || 0);
+      document.getElementById('v-subtotal').textContent = fmt(subtotal);
+      document.getElementById('v-desconto').textContent = fmt(desc);
+      document.getElementById('v-total').textContent = fmt(Math.max(subtotal - desc, 0));
+    }
+    
+    function rem(i) {
+      carrinho.splice(i, 1);
+      renderCarrinho();
+    }
+    
+    function addItemVenda() {
+      const prod = document.getElementById('v-produto').value.trim();
+      const qtd = parseInt(document.getElementById('v-qtd').value || '1');
+      const preco = parseFloat(document.getElementById('v-preco').value || '0');
+      
+      if (!prod || qtd <= 0 || preco <= 0) {
+        alert('Preencha produto, quantidade e preço.');
+        return;
+      }
+      
+      carrinho.push({ prod, qtd, preco });
+      
+      // Baixa automática de estoque
+      const idx = estoque.findIndex(e => e.desc.toLowerCase() === prod.toLowerCase());
+      if (idx > -1) {
+        estoque[idx].qtd = Math.max(0, (parseInt(estoque[idx].qtd || 0)) - qtd);
+        S.save('gc_estoque', estoque);
+      }
+      
+      document.getElementById('v-produto').value = '';
+      document.getElementById('v-preco').value = '';
+      renderCarrinho();
+      renderEstoque();
+    }
+    
+    function limparCarrinho() {
+      carrinho = [];
+      renderCarrinho();
+    }
+    
+    function finalizarVenda() {
+      if (!carrinho.length) {
+        alert('Adicione itens ao carrinho.');
+        return;
+      }
+      
+      const cli = document.getElementById('v-cli').value.trim() || '—';
+      const pag = document.getElementById('v-pag').value;
+      const obs = document.getElementById('v-obs').value.trim() || '—';
+      const desc = parseFloat(document.getElementById('v-desc').value || 0);
+      const subtotal = carrinho.reduce((s, i) => s + i.qtd * i.preco, 0);
+      const total = Math.max(subtotal - desc, 0);
+      
+      const venda = {
+        id: Date.now(),
+        data: nowStr(),
+        itens: [...carrinho],
+        cli,
+        pag,
+        obs,
+        subtotal,
+        desc,
+        total
+      };
+      
+      vendas.unshift(venda);
+      S.save('gc_vendas', vendas);
+      
+      // Preencher comprovante
+      docReceipt(venda);
+      
+      // Limpar carrinho
+      carrinho = [];
+      renderCarrinho();
+      window.print();
+    }
+    
+    function docReceipt(v) {
+      const printArea = document.getElementById('print-area');
+      printArea.innerHTML = `
+        <div class="receipt">
+          <div class="doc-header">
+            <img src="https://i.imgur.com/DgLmg9r.png" alt="Logo">
+            <div>
+              <div class="doc-title">${loja.nome}</div>
+              <div class="doc-meta">${loja.contato || ''}</div>
+            </div>
+          </div>
+          <div style="font-size:13px;margin-bottom:6px">
+            Comprovante de venda • ${v.data}
+          </div>
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Qtd</th>
+                <th>Preço</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${v.itens.map(i => `
+                <tr>
+                  <td>${i.prod}</td>
+                  <td>${i.qtd}</td>
+                  <td>${fmt(i.preco)}</td>
+                  <td>${fmt(i.qtd * i.preco)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="3" style="text-align:right">Subtotal</th>
+                <td>${fmt(v.subtotal)}</td>
+              </tr>
+              <tr>
+                <th colspan="3" style="text-align:right">Desconto</th>
+                <td>${fmt(v.desc)}</td>
+              </tr>
+              <tr>
+                <th colspan="3" style="text-align:right">Total</th>
+                <td style="font-weight:800">${fmt(v.total)}</td>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="doc-footer">
+            <div>Cliente: ${v.cli} | Pagamento: ${v.pag}</div>
+            <div>Obs.: ${v.obs}</div>
+            <div style="margin-top:8px">${loja.msg || ''}</div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // ====== ESTOQUE ======
+    function addEstoque() {
+      const desc = document.getElementById('e-desc').value.trim();
+      const qtd = parseInt(document.getElementById('e-qtd').value || '1');
+      const custo = parseFloat(document.getElementById('e-custo').value || '0');
+      const preco = parseFloat(document.getElementById('e-preco').value || '0');
+      
+      if (!desc || qtd <= 0) {
+        alert('Preencha a descrição e quantidade.');
+        return;
+      }
+      
+      const i = estoque.findIndex(e => e.desc.toLowerCase() === desc.toLowerCase());
+      if (i > -1) {
+        estoque[i].qtd += qtd;
+        estoque[i].custo = custo;
+        estoque[i].preco = preco;
+      } else {
+        estoque.unshift({
+          id: Date.now(),
+          desc,
+          qtd,
+          custo,
+          preco
+        });
+      }
+      
+      S.save('gc_estoque', estoque);
+      renderEstoque();
+      document.getElementById('e-desc').value = '';
+    }
+    
+    function renderEstoque() {
+      const tb = document.getElementById('e-tbody');
+      if (!tb) return;
+      
+      tb.innerHTML = '';
+      estoque.forEach((e, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${e.desc}</td>
+          <td>${e.qtd}</td>
+          <td>${fmt(e.custo || 0)}</td>
+          <td>${fmt(e.preco || 0)}</td>
+          <td><button class='btn btn-danger' onclick='delProd(${idx})'>Excluir</button></td>
+        `;
+        tb.appendChild(tr);
+      });
+    }
+    
+    function delProd(i) {
+      if (confirm('Excluir produto do estoque?')) {
+        estoque.splice(i, 1);
+        S.save('gc_estoque', estoque);
+        renderEstoque();
+      }
+    }
+    
+    // ====== OS ======
+    function abrirOS() {
+      const cliente = document.getElementById('os-cliente').value.trim();
+      const modelo = document.getElementById('os-modelo').value.trim();
+      const imei = document.getElementById('os-imei').value.trim();
+      const defeito = document.getElementById('os-defeito').value.trim();
+      const obs = document.getElementById('os-obs').value.trim();
+      const valor = parseFloat(document.getElementById('os-valor').value || '0');
+      const status = document.getElementById('os-status').value;
+      
+      if (!cliente || !modelo || !defeito) {
+        alert('Preencha cliente, modelo e defeito.');
+        return;
+      }
+      
+      lastOSId++;
+      S.save('gc_last_os', lastOSId);
+      
+      const os = {
+        id: lastOSId,
+        data: nowStr(),
+        cliente,
+        modelo,
+        imei,
+        defeito,
+        obs,
+        valor,
+        status
+      };
+      
+      ordens.unshift(os);
+      S.save('gc_os', ordens);
+      renderOS();
+      preencherOS(os);
+      alert('OS salva! Agora você pode imprimir.');
+    }
+    
+    function renderOS() {
+      const tb = document.getElementById('os-tbody');
+      if (!tb) return;
+      
+      tb.innerHTML = '';
+      ordens.forEach((o, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${o.id}</td>
+          <td>${o.cliente}</td>
+          <td>${o.modelo}</td>
+          <td>${o.status}</td>
+          <td>${fmt(o.valor || 0)}</td>
+          <td>${o.data}</td>
+          <td><button class='btn' onclick='preencherOS(ordens[${idx}]); window.print()'>Imprimir</button></td>
+        `;
+        tb.appendChild(tr);
+      });
+    }
+    
+    function imprimirOSAtual() {
+      if (!ordens.length) {
+        alert('Nenhuma OS criada ainda.');
+        return;
+      }
+      
+      preencherOS(ordens[0]);
+      window.print();
+    }
+    
+    function preencherOS(o) {
+      const printArea = document.getElementById('print-area');
+      printArea.innerHTML = `
+        <div class="os-doc">
+          <div class="doc-header">
+            <img src="https://i.imgur.com/DgLmg9r.png" alt="Logo">
+            <div>
+              <div class="doc-title">${loja.nome}</div>
+              <div class="doc-meta">${loja.contato || ''}</div>
+            </div>
+          </div>
+          <div style="font-size:13px;margin-bottom:6px">
+            Ordem de Serviço • Nº ${o.id} • ${o.data}
+          </div>
+          <table class="doc-table">
+            <tbody>
+              <tr><th>Cliente</th><td>${o.cliente}</td></tr>
+              <tr><th>Modelo</th><td>${o.modelo}</td></tr>
+              <tr><th>IMEI/Serial</th><td>${o.imei || '—'}</td></tr>
+              <tr><th>Defeito</th><td>${o.defeito}</td></tr>
+              <tr><th>Observações</th><td>${o.obs || '—'}</td></tr>
+              <tr><th>Status</th><td>${o.status}</td></tr>
+              <tr><th>Valor estimado</th><td>${fmt(o.valor || 0)}</td></tr>
+            </tbody>
+          </table>
+          <div class="doc-footer" style="margin-top:8px">
+            ${loja.msg || ''}
+          </div>
+        </div>
+      `;
+    }
+    
+    // ====== FINANCEIRO ======
+    function atualizarFinanceiro() {
+      const somaVendas = vendas.reduce((s, v) => s + v.total, 0);
+      const somaCompras = estoque.reduce((s, e) => s + (e.custo || 0) * (e.qtd || 0), 0);
+      
+      document.getElementById('fin-vendas').textContent = somaVendas.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+      
+      document.getElementById('fin-compras').textContent = somaCompras.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+      
+      const res = somaVendas - somaCompras;
+      document.getElementById('fin-resultado').textContent = res.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+    }
+    
+    // ====== RELATÓRIOS ======
+    function exportCSV(tipo) {
+      let rows = [];
+      
+      if (tipo === 'vendas') {
+        rows.push(['id', 'data', 'cliente', 'pagamento', 'subtotal', 'desconto', 'total', 'itens']);
+        vendas.forEach(v => {
+          rows.push([
+            v.id,
+            v.data,
+            v.cli,
+            v.pag,
+            v.subtotal,
+            v.desc,
+            v.total,
+            v.itens.map(i => `${i.qtd}x ${i.prod} (${i.preco})`).join(' | ')
+          ]);
+        });
+      } else if (tipo === 'estoque') {
+        rows.push(['id', 'descricao', 'qtd', 'custo', 'preco']);
+        estoque.forEach(e => {
+          rows.push([
+            e.id || '',
+            e.desc,
+            e.qtd,
+            e.custo,
+            e.preco
+          ]);
+        });
+      } else if (tipo === 'os') {
+        rows.push(['id', 'data', 'cliente', 'modelo', 'imei', 'defeito', 'obs', 'valor', 'status']);
+        ordens.forEach(o => {
+          rows.push([
+            o.id,
+            o.data,
+            o.cliente,
+            o.modelo,
+            o.imei,
+            o.defeito,
+            o.obs,
+            o.valor,
+            o.status
+          ]);
+        });
+      }
+      
+      const csv = rows.map(r => r.map(v => `"${String(v ?? '').replaceAll('"', '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `galegocell_${tipo}.csv`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+    
+    // ====== CONFIG ======
+    function salvarConfig() {
+      loja = {
+        nome: document.getElementById('cfg-nome').value.trim() || 'Assistência Técnica Galego Cell',
+        contato: document.getElementById('cfg-contato').value.trim(),
+        msg: document.getElementById('cfg-msg').value.trim()
+      };
+      
+      S.save('gc_cfg', loja);
+      alert('Configurações salvas!');
+    }
+    
+    function resetarTudo() {
+      if (confirm('Isso vai apagar os dados salvos localmente (vendas, OS e estoque). Deseja continuar?')) {
+        localStorage.removeItem('gc_cfg');
+        localStorage.removeItem('gc_estoque');
+        localStorage.removeItem('gc_vendas');
+        localStorage.removeItem('gc_os');
+        localStorage.removeItem('gc_last_os');
+        
+        loja = {
+          nome: 'Assistência Técnica Galego Cell',
+          contato: '',
+          msg: ''
+        };
+        
+        estoque = [];
+        vendas = [];
+        ordens = [];
+        lastOSId = 0;
+        
+        renderEstoque();
+        renderOS();
+        renderCarrinho();
+        atualizarFinanceiro();
+        
+        alert('Dados limpos!');
+      }
+    }
+    
+    // STARTUP
+    document.addEventListener('DOMContentLoaded', function() {
+      // Carregar configurações
+      document.getElementById('cfg-contato').value = loja.contato || '';
+      document.getElementById('cfg-msg').value = loja.msg || '';
+      document.getElementById('cfg-nome').value = loja.nome || 'Assistência Técnica Galego Cell';
+      
+      // Inicializar visualizações
+      renderEstoque();
+      renderOS();
+      renderCarrinho();
+      atualizarFinanceiro();
+    });
+  </script>
+</body>
+            </html>
