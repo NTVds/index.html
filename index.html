@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Galego Cell - Gestão Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .nav-btn.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .nav-btn:hover {
+            background-color: #e5e7eb;
+        }
+        .nav-btn.active:hover {
+            background-color: #2563eb;
+        }
+        .module {
+            display: none;
+        }
+        .module.active {
+            display: block;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-mobile-alt text-2xl"></i>
+                    <div>
+                        <h1 class="text-xl font-bold">ASSISTÊNCIA GALEGO CELL</h1>
+                        <p class="text-sm opacity-90">Sistema de Gestão Completo</p>
+                    </div>
+                </div>
+                <div class="text-right text-sm">
+                    <p><i class="fas fa-phone"></i> (84) 98718-1612</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Rua Tijuana, 19</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-1 overflow-x-auto">
+                <button onclick="showModule('vendas')" class="nav-btn active px-4 py-3 text-sm font-medium rounded-t-lg transition-colors">
+                    <i class="fas fa-shopping-cart mr-2"></i>Vendas
+                </button>
+                <button onclick="showModule('estoque')" class="nav-btn px-4 py-3 text-sm font-medium rounded-t-lg transition-colors">
+                    <i class="fas fa-boxes mr-2"></i>Estoque
+                </button>
+                <button onclick="showModule('servicos')" class="nav-btn px-4 py-3 text-sm font-medium rounded-t-lg transition-colors">
+                    <i class="fas fa-tools mr-2"></i>Serviços
+                </button>
+                <button onclick="showModule('financeiro')" class="nav-btn px-4 py-3 text-sm font-medium rounded-t-lg transition-colors">
+                    <i class="fas fa-chart-line mr-2"></i>Financeiro
+                </button>
+                <button onclick="showModule('relatorios')" class="nav-btn px-4 py-3 text-sm font-medium rounded-t-lg transition-colors">
+                    <i class="fas fa-file-alt mr-2"></i>Relatórios
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- Módulo Vendas -->
+        <div id="vendas" class="module active fade-in">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-shopping-cart mr-3 text-blue-600"></i>Sistema de Vendas
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Formulário de Venda -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Nova Venda</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
+                            <input type="text" id="clienteVenda" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Nome do cliente">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Produto</label>
+                                <select id="produtoVenda" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">Selecione um produto</option>
+                                    <option value="Película de Vidro">Película de Vidro - R$ 15,00</option>
+                                    <option value="Capinha">Capinha - R$ 25,00</option>
+                                    <option value="Carregador">Carregador - R$ 35,00</option>
+                                    <option value="Fone de Ouvido">Fone de Ouvido - R$ 45,00</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Quantidade</label>
+                                <input type="number" id="quantidadeVenda" min="1" value="1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Valor Total</label>
+                            <input type="text" id="valorVenda" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" readonly>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Forma de Pagamento</label>
+                            <select id="pagamentoVenda" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="Dinheiro">Dinheiro</option>
+                                <option value="Cartão de Débito">Cartão de Débito</option>
+                                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                <option value="PIX">PIX</option>
+                            </select>
+                        </div>
+                        
+                        <button onclick="registrarVenda()" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Registrar Venda
+                        </button>
+                        <button onclick="gerarComprovanteVenda()" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors mt-2">
+                            <i class="fas fa-receipt mr-2"></i>Gerar Comprovante da Última Venda
+                        </button>
+                    </div>
+                    
+                    <!-- Lista de Vendas -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Vendas do Dia</h3>
+                        <div id="listaVendas" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Vendas serão adicionadas aqui -->
+                        </div>
+                        <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p class="text-sm text-gray-600">Total do Dia: <span id="totalDia" class="font-bold text-blue-600">R$ 0,00</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Estoque -->
+        <div id="estoque" class="module">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-boxes mr-3 text-green-600"></i>Controle de Estoque
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Adicionar Produto -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Adicionar Produto</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nome do Produto</label>
+                            <input type="text" id="nomeProduto" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Ex: Película de Vidro iPhone 12">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Preço de Compra</label>
+                                <input type="number" id="precoCompra" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0,00">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Preço de Venda</label>
+                                <input type="number" id="precoVenda" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0,00">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Quantidade</label>
+                            <input type="number" id="quantidadeProduto" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0">
+                        </div>
+                        
+                        <button onclick="adicionarProduto()" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Adicionar ao Estoque
+                        </button>
+                    </div>
+                    
+                    <!-- Lista de Produtos -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Produtos em Estoque</h3>
+                        <div id="listaProdutos" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Produtos serão adicionados aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Serviços -->
+        <div id="servicos" class="module">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-tools mr-3 text-orange-600"></i>Ordem de Serviço
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Nova OS -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Nova Ordem de Serviço</h3>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
+                                <input type="text" id="clienteOS" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="Nome do cliente">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                                <input type="tel" id="telefoneOS" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="(84) 99999-9999">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Equipamento</label>
+                            <input type="text" id="equipamentoOS" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="Ex: iPhone 12 Pro">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Problema Relatado</label>
+                            <textarea id="problemaOS" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="Descreva o problema..."></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Valor do Serviço</label>
+                                <input type="number" id="valorOS" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="0,00">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <select id="statusOS" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                                    <option value="Aguardando">Aguardando</option>
+                                    <option value="Em Andamento">Em Andamento</option>
+                                    <option value="Concluído">Concluído</option>
+                                    <option value="Entregue">Entregue</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button onclick="criarOS()" class="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Criar Ordem de Serviço
+                        </button>
+                        <button onclick="gerarComprovanteOS()" class="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors mt-2">
+                            <i class="fas fa-file-contract mr-2"></i>Gerar Comprovante da Última OS
+                        </button>
+                    </div>
+                    
+                    <!-- Lista de OS -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Ordens de Serviço</h3>
+                        <div id="listaOS" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- OS serão adicionadas aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Financeiro -->
+        <div id="financeiro" class="module">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-chart-line mr-3 text-purple-600"></i>Controle Financeiro
+                </h2>
+                
+                <!-- Cards de Resumo -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <div class="flex items-center">
+                            <i class="fas fa-arrow-up text-green-600 text-xl mr-3"></i>
+                            <div>
+                                <p class="text-sm text-gray-600">Receitas</p>
+                                <p id="totalReceitas" class="text-lg font-bold text-green-600">R$ 0,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                        <div class="flex items-center">
+                            <i class="fas fa-arrow-down text-red-600 text-xl mr-3"></i>
+                            <div>
+                                <p class="text-sm text-gray-600">Despesas</p>
+                                <p id="totalDespesas" class="text-lg font-bold text-red-600">R$ 0,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <div class="flex items-center">
+                            <i class="fas fa-wallet text-blue-600 text-xl mr-3"></i>
+                            <div>
+                                <p class="text-sm text-gray-600">Saldo</p>
+                                <p id="saldoTotal" class="text-lg font-bold text-blue-600">R$ 0,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                        <div class="flex items-center">
+                            <i class="fas fa-chart-bar text-yellow-600 text-xl mr-3"></i>
+                            <div>
+                                <p class="text-sm text-gray-600">Meta Mensal</p>
+                                <p class="text-lg font-bold text-yellow-600">R$ 5.000,00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Adicionar Transação -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Nova Transação</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                            <select id="tipoTransacao" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                <option value="receita">Receita</option>
+                                <option value="despesa">Despesa</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                            <input type="text" id="descricaoTransacao" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="Ex: Venda de capinha">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Valor</label>
+                                <input type="number" id="valorTransacao" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="0,00">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Data</label>
+                                <input type="date" id="dataTransacao" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                        </div>
+                        
+                        <button onclick="adicionarTransacao()" class="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Adicionar Transação
+                        </button>
+                    </div>
+                    
+                    <!-- Lista de Transações -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Transações Recentes</h3>
+                        <div id="listaTransacoes" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Transações serão adicionadas aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Relatórios -->
+        <div id="relatorios" class="module">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-file-alt mr-3 text-indigo-600"></i>Relatórios
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Filtros -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Gerar Relatório</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Relatório</label>
+                            <select id="tipoRelatorio" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="vendas">Relatório de Vendas</option>
+                                <option value="servicos">Relatório de Serviços</option>
+                                <option value="financeiro">Relatório Financeiro</option>
+                                <option value="estoque">Relatório de Estoque</option>
+                            </select>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Data Inicial</label>
+                                <input type="date" id="dataInicial" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Data Final</label>
+                                <input type="date" id="dataFinal" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <button onclick="gerarRelatorio()" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">
+                                <i class="fas fa-chart-bar mr-2"></i>Gerar Relatório
+                            </button>
+                            <button onclick="exportarPDF()" class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors">
+                                <i class="fas fa-file-pdf mr-2"></i>Exportar PDF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Área do Relatório -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Resultado</h3>
+                        <div id="areaRelatorio" class="bg-gray-50 p-4 rounded-lg min-h-96 border-2 border-dashed border-gray-300">
+                            <p class="text-gray-500 text-center">Selecione os filtros e clique em "Gerar Relatório" para visualizar os dados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Dados em memória
+        let vendas = [];
+        let produtos = [];
+        let ordensServico = [];
+        let transacoes = [];
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Definir data atual nos campos de data
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('dataTransacao').value = hoje;
+            document.getElementById('dataInicial').value = hoje;
+            document.getElementById('dataFinal').value = hoje;
+            
+            // Carregar dados salvos
+            carregarDados();
+            
+            // Atualizar cálculos automáticos
+            document.getElementById('produtoVenda').addEventListener('change', calcularValorVenda);
+            document.getElementById('quantidadeVenda').addEventListener('input', calcularValorVenda);
+        });
+
+        // Navegação entre módulos
+        function showModule(moduleId) {
+            // Esconder todos os módulos
+            document.querySelectorAll('.module').forEach(module => {
+                module.classList.remove('active');
+            });
+            
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar módulo selecionado
+            document.getElementById(moduleId).classList.add('active', 'fade-in');
+            
+            // Ativar botão correspondente
+            event.target.classList.add('active');
+        }
+
+        // Funções de Vendas
+        function calcularValorVenda() {
+            const produto = document.getElementById('produtoVenda').value;
+            const quantidade = parseInt(document.getElementById('quantidadeVenda').value) || 0;
+            
+            let preco = 0;
+            if (produto.includes('15,00')) preco = 15;
+            else if (produto.includes('25,00')) preco = 25;
+            else if (produto.includes('35,00')) preco = 35;
+            else if (produto.includes('45,00')) preco = 45;
+            
+            const total = preco * quantidade;
+            document.getElementById('valorVenda').value = `R$ ${total.toFixed(2)}`;
+        }
+
+        function registrarVenda() {
+            const cliente = document.getElementById('clienteVenda').value;
+            const produto = document.getElementById('produtoVenda').value;
+            const quantidade = parseInt(document.getElementById('quantidadeVenda').value);
+            const valor = parseFloat(document.getElementById('valorVenda').value.replace('R$ ', ''));
+            const pagamento = document.getElementById('pagamentoVenda').value;
+            
+            if (!cliente || !produto || !quantidade || !valor) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+            
+            const venda = {
+                id: Date.now(),
+                cliente,
+                produto: produto.split(' - ')[0],
+                quantidade,
+                valor,
+                pagamento,
+                data: new Date().toLocaleString('pt-BR')
+            };
+            
+            vendas.push(venda);
+            salvarDados();
+            atualizarListaVendas();
+            limparFormularioVenda();
+            
+            // Adicionar automaticamente como receita
+            const transacao = {
+                id: Date.now() + 1,
+                tipo: 'receita',
+                descricao: `Venda: ${venda.produto}`,
+                valor: venda.valor,
+                data: new Date().toISOString().split('T')[0]
+            };
+            transacoes.push(transacao);
+            atualizarResumoFinanceiro();
+        }
+
+        function atualizarListaVendas() {
+            const lista = document.getElementById('listaVendas');
+            const vendasHoje = vendas.filter(v => v.data.includes(new Date().toLocaleDateString('pt-BR')));
+            
+            lista.innerHTML = vendasHoje.map(venda => `
+                <div class="bg-gray-50 p-3 rounded-lg border">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-medium">${venda.cliente}</p>
+                            <p class="text-sm text-gray-600">${venda.produto} (${venda.quantidade}x)</p>
+                            <p class="text-xs text-gray-500">${venda.pagamento}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-green-600">R$ ${venda.valor.toFixed(2)}</p>
+                            <p class="text-xs text-gray-500">${venda.data}</p>
+                            <button onclick="gerarComprovanteVendaEspecifica(${venda.id})" class="mt-1 text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
+                                <i class="fas fa-download"></i> PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            const total = vendasHoje.reduce((sum, venda) => sum + venda.valor, 0);
+            document.getElementById('totalDia').textContent = `R$ ${total.toFixed(2)}`;
+        }
+
+        function limparFormularioVenda() {
+            document.getElementById('clienteVenda').value = '';
+            document.getElementById('produtoVenda').value = '';
+            document.getElementById('quantidadeVenda').value = '1';
+            document.getElementById('valorVenda').value = '';
+        }
+
+        // Funções de Estoque
+        function adicionarProduto() {
+            const nome = document.getElementById('nomeProduto').value;
+            const precoCompra = parseFloat(document.getElementById('precoCompra').value);
+            const precoVenda = parseFloat(document.getElementById('precoVenda').value);
+            const quantidade = parseInt(document.getElementById('quantidadeProduto').value);
+            
+            if (!nome || !precoCompra || !precoVenda || quantidade < 0) {
+                alert('Por favor, preencha todos os campos corretamente!');
+                return;
+            }
+            
+            const produto = {
+                id: Date.now(),
+                nome,
+                precoCompra,
+                precoVenda,
+                quantidade,
+                data: new Date().toLocaleString('pt-BR')
+            };
+            
+            produtos.push(produto);
+            salvarDados();
+            atualizarListaProdutos();
+            limparFormularioProduto();
+        }
+
+        function atualizarListaProdutos() {
+            const lista = document.getElementById('listaProdutos');
+            
+            lista.innerHTML = produtos.map(produto => `
+                <div class="bg-gray-50 p-3 rounded-lg border">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-medium">${produto.nome}</p>
+                            <p class="text-sm text-gray-600">Compra: R$ ${produto.precoCompra.toFixed(2)} | Venda: R$ ${produto.precoVenda.toFixed(2)}</p>
+                            <p class="text-xs text-gray-500">Adicionado em: ${produto.data}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold ${produto.quantidade > 5 ? 'text-green-600' : produto.quantidade > 0 ? 'text-yellow-600' : 'text-red-600'}">
+                                ${produto.quantidade} unidades
+                            </p>
+                            <button onclick="removerProduto(${produto.id})" class="text-red-500 hover:text-red-700 text-xs">
+                                <i class="fas fa-trash"></i> Remover
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removerProduto(id) {
+            if (confirm('Tem certeza que deseja remover este produto?')) {
+                produtos = produtos.filter(p => p.id !== id);
+                salvarDados();
+                atualizarListaProdutos();
+            }
+        }
+
+        function limparFormularioProduto() {
+            document.getElementById('nomeProduto').value = '';
+            document.getElementById('precoCompra').value = '';
+            document.getElementById('precoVenda').value = '';
+            document.getElementById('quantidadeProduto').value = '';
+        }
+
+        // Funções de Serviços
+        function criarOS() {
+            const cliente = document.getElementById('clienteOS').value;
+            const telefone = document.getElementById('telefoneOS').value;
+            const equipamento = document.getElementById('equipamentoOS').value;
+            const problema = document.getElementById('problemaOS').value;
+            const valor = parseFloat(document.getElementById('valorOS').value);
+            const status = document.getElementById('statusOS').value;
+            
+            if (!cliente || !telefone || !equipamento || !problema || !valor) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+            
+            const os = {
+                id: Date.now(),
+                numero: `OS${String(ordensServico.length + 1).padStart(4, '0')}`,
+                cliente,
+                telefone,
+                equipamento,
+                problema,
+                valor,
+                status,
+                data: new Date().toLocaleString('pt-BR')
+            };
+            
+            ordensServico.push(os);
+            salvarDados();
+            atualizarListaOS();
+            limparFormularioOS();
+        }
+
+        function atualizarListaOS() {
+            const lista = document.getElementById('listaOS');
+            
+            lista.innerHTML = ordensServico.map(os => `
+                <div class="bg-gray-50 p-3 rounded-lg border">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="font-bold text-blue-600">${os.numero}</p>
+                            <p class="font-medium">${os.cliente}</p>
+                            <p class="text-sm text-gray-600">${os.telefone}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="px-2 py-1 text-xs rounded-full ${getStatusColor(os.status)}">
+                                ${os.status}
+                            </span>
+                            <p class="font-bold text-green-600 mt-1">R$ ${os.valor.toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <p class="text-sm"><strong>Equipamento:</strong> ${os.equipamento}</p>
+                    <p class="text-sm"><strong>Problema:</strong> ${os.problema}</p>
+                    <p class="text-xs text-gray-500 mt-2">${os.data}</p>
+                    <div class="mt-2 flex space-x-2">
+                        <button onclick="atualizarStatusOS(${os.id})" class="text-blue-500 hover:text-blue-700 text-xs">
+                            <i class="fas fa-edit"></i> Atualizar
+                        </button>
+                        <button onclick="gerarComprovanteOSEspecifica(${os.id})" class="text-green-500 hover:text-green-700 text-xs">
+                            <i class="fas fa-download"></i> PDF
+                        </button>
+                        <button onclick="removerOS(${os.id})" class="text-red-500 hover:text-red-700 text-xs">
+                            <i class="fas fa-trash"></i> Remover
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Aguardando': return 'bg-yellow-100 text-yellow-800';
+                case 'Em Andamento': return 'bg-blue-100 text-blue-800';
+                case 'Concluído': return 'bg-green-100 text-green-800';
+                case 'Entregue': return 'bg-gray-100 text-gray-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function atualizarStatusOS(id) {
+            const novoStatus = prompt('Novo status:', 'Em Andamento');
+            if (novoStatus) {
+                const os = ordensServico.find(o => o.id === id);
+                if (os) {
+                    os.status = novoStatus;
+                    salvarDados();
+                    atualizarListaOS();
+                }
+            }
+        }
+
+        function removerOS(id) {
+            if (confirm('Tem certeza que deseja remover esta OS?')) {
+                ordensServico = ordensServico.filter(o => o.id !== id);
+                salvarDados();
+                atualizarListaOS();
+            }
+        }
+
+        function limparFormularioOS() {
+            document.getElementById('clienteOS').value = '';
+            document.getElementById('telefoneOS').value = '';
+            document.getElementById('equipamentoOS').value = '';
+            document.getElementById('problemaOS').value = '';
+            document.getElementById('valorOS').value = '';
+            document.getElementById('statusOS').value = 'Aguardando';
+        }
+
+        // Funções Financeiras
+        function adicionarTransacao() {
+            const tipo = document.getElementById('tipoTransacao').value;
+            const descricao = document.getElementById('descricaoTransacao').value;
+            const valor = parseFloat(document.getElementById('valorTransacao').value);
+            const data = document.getElementById('dataTransacao').value;
+            
+            if (!descricao || !valor || !data) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+            
+            const transacao = {
+                id: Date.now(),
+                tipo,
+                descricao,
+                valor,
+                data
+            };
+            
+            transacoes.push(transacao);
+            salvarDados();
+            atualizarListaTransacoes();
+            atualizarResumoFinanceiro();
+            limparFormularioTransacao();
+        }
+
+        function atualizarListaTransacoes() {
+            const lista = document.getElementById('listaTransacoes');
+            const transacoesRecentes = transacoes.slice(-10).reverse();
+            
+            lista.innerHTML = transacoesRecentes.map(transacao => `
+                <div class="bg-gray-50 p-3 rounded-lg border">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-medium">${transacao.descricao}</p>
+                            <p class="text-xs text-gray-500">${new Date(transacao.data).toLocaleDateString('pt-BR')}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold ${transacao.tipo === 'receita' ? 'text-green-600' : 'text-red-600'}">
+                                ${transacao.tipo === 'receita' ? '+' : '-'} R$ ${transacao.valor.toFixed(2)}
+                            </p>
+                            <button onclick="removerTransacao(${transacao.id})" class="text-red-500 hover:text-red-700 text-xs">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function atualizarResumoFinanceiro() {
+            const receitas = transacoes.filter(t => t.tipo === 'receita').reduce((sum, t) => sum + t.valor, 0);
+            const despesas = transacoes.filter(t => t.tipo === 'despesa').reduce((sum, t) => sum + t.valor, 0);
+            const saldo = receitas - despesas;
+            
+            document.getElementById('totalReceitas').textContent = `R$ ${receitas.toFixed(2)}`;
+            document.getElementById('totalDespesas').textContent = `R$ ${despesas.toFixed(2)}`;
+            document.getElementById('saldoTotal').textContent = `R$ ${saldo.toFixed(2)}`;
+        }
+
+        function removerTransacao(id) {
+            if (confirm('Tem certeza que deseja remover esta transação?')) {
+                transacoes = transacoes.filter(t => t.id !== id);
+                salvarDados();
+                atualizarListaTransacoes();
+                atualizarResumoFinanceiro();
+            }
+        }
+
+        function limparFormularioTransacao() {
+            document.getElementById('descricaoTransacao').value = '';
+            document.getElementById('valorTransacao').value = '';
+        }
+
+        // Funções de Relatórios
+        function gerarRelatorio() {
+            const tipo = document.getElementById('tipoRelatorio').value;
+            const dataInicial = document.getElementById('dataInicial').value;
+            const dataFinal = document.getElementById('dataFinal').value;
+            const area = document.getElementById('areaRelatorio');
+            
+            if (!dataInicial || !dataFinal) {
+                alert('Por favor, selecione as datas!');
+                return;
+            }
+            
+            let conteudo = '';
+            
+            switch(tipo) {
+                case 'vendas':
+                    conteudo = gerarRelatorioVendas(dataInicial, dataFinal);
+                    break;
+                case 'servicos':
+                    conteudo = gerarRelatorioServicos(dataInicial, dataFinal);
+                    break;
+                case 'financeiro':
+                    conteudo = gerarRelatorioFinanceiro(dataInicial, dataFinal);
+                    break;
+                case 'estoque':
+                    conteudo = gerarRelatorioEstoque();
+                    break;
+            }
+            
+            area.innerHTML = conteudo;
+        }
+
+        function gerarRelatorioVendas(dataInicial, dataFinal) {
+            const vendasPeriodo = vendas.filter(v => {
+                const dataVenda = new Date(v.data.split(' ')[0].split('/').reverse().join('-'));
+                return dataVenda >= new Date(dataInicial) && dataVenda <= new Date(dataFinal);
+            });
+            
+            const total = vendasPeriodo.reduce((sum, v) => sum + v.valor, 0);
+            
+            return `
+                <div class="space-y-4">
+                    <h4 class="font-bold text-lg">Relatório de Vendas</h4>
+                    <p><strong>Período:</strong> ${new Date(dataInicial).toLocaleDateString('pt-BR')} a ${new Date(dataFinal).toLocaleDateString('pt-BR')}</p>
+                    <p><strong>Total de Vendas:</strong> ${vendasPeriodo.length}</p>
+                    <p><strong>Valor Total:</strong> R$ ${total.toFixed(2)}</p>
+                    <div class="space-y-2">
+                        ${vendasPeriodo.map(v => `
+                            <div class="bg-white p-2 rounded border">
+                                <p><strong>${v.cliente}</strong> - ${v.produto} (${v.quantidade}x) - R$ ${v.valor.toFixed(2)}</p>
+                                <p class="text-sm text-gray-600">${v.data} - ${v.pagamento}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function gerarRelatorioServicos(dataInicial, dataFinal) {
+            const servicosPeriodo = ordensServico.filter(os => {
+                const dataOS = new Date(os.data.split(' ')[0].split('/').reverse().join('-'));
+                return dataOS >= new Date(dataInicial) && dataOS <= new Date(dataFinal);
+            });
+            
+            const total = servicosPeriodo.reduce((sum, os) => sum + os.valor, 0);
+            
+            return `
+                <div class="space-y-4">
+                    <h4 class="font-bold text-lg">Relatório de Serviços</h4>
+                    <p><strong>Período:</strong> ${new Date(dataInicial).toLocaleDateString('pt-BR')} a ${new Date(dataFinal).toLocaleDateString('pt-BR')}</p>
+                    <p><strong>Total de OS:</strong> ${servicosPeriodo.length}</p>
+                    <p><strong>Valor Total:</strong> R$ ${total.toFixed(2)}</p>
+                    <div class="space-y-2">
+                        ${servicosPeriodo.map(os => `
+                            <div class="bg-white p-2 rounded border">
+                                <p><strong>${os.numero}</strong> - ${os.cliente} - ${os.equipamento}</p>
+                                <p class="text-sm text-gray-600">${os.problema} - R$ ${os.valor.toFixed(2)} - ${os.status}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function gerarRelatorioFinanceiro(dataInicial, dataFinal) {
+            const transacoesPeriodo = transacoes.filter(t => {
+                return t.data >= dataInicial && t.data <= dataFinal;
+            });
+            
+            const receitas = transacoesPeriodo.filter(t => t.tipo === 'receita').reduce((sum, t) => sum + t.valor, 0);
+            const despesas = transacoesPeriodo.filter(t => t.tipo === 'despesa').reduce((sum, t) => sum + t.valor, 0);
+            
+            return `
+                <div class="space-y-4">
+                    <h4 class="font-bold text-lg">Relatório Financeiro</h4>
+                    <p><strong>Período:</strong> ${new Date(dataInicial).toLocaleDateString('pt-BR')} a ${new Date(dataFinal).toLocaleDateString('pt-BR')}</p>
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        <div class="bg-green-50 p-3 rounded">
+                            <p class="text-sm text-gray-600">Receitas</p>
+                            <p class="font-bold text-green-600">R$ ${receitas.toFixed(2)}</p>
+                        </div>
+                        <div class="bg-red-50 p-3 rounded">
+                            <p class="text-sm text-gray-600">Despesas</p>
+                            <p class="font-bold text-red-600">R$ ${despesas.toFixed(2)}</p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded">
+                            <p class="text-sm text-gray-600">Saldo</p>
+                            <p class="font-bold text-blue-600">R$ ${(receitas - despesas).toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        ${transacoesPeriodo.map(t => `
+                            <div class="bg-white p-2 rounded border">
+                                <p><strong>${t.descricao}</strong> - ${t.tipo === 'receita' ? '+' : '-'} R$ ${t.valor.toFixed(2)}</p>
+                                <p class="text-sm text-gray-600">${new Date(t.data).toLocaleDateString('pt-BR')}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function gerarRelatorioEstoque() {
+            const valorTotal = produtos.reduce((sum, p) => sum + (p.precoCompra * p.quantidade), 0);
+            
+            return `
+                <div class="space-y-4">
+                    <h4 class="font-bold text-lg">Relatório de Estoque</h4>
+                    <p><strong>Total de Produtos:</strong> ${produtos.length}</p>
+                    <p><strong>Valor Total em Estoque:</strong> R$ ${valorTotal.toFixed(2)}</p>
+                    <div class="space-y-2">
+                        ${produtos.map(p => `
+                            <div class="bg-white p-2 rounded border">
+                                <p><strong>${p.nome}</strong> - ${p.quantidade} unidades</p>
+                                <p class="text-sm text-gray-600">Compra: R$ ${p.precoCompra.toFixed(2)} | Venda: R$ ${p.precoVenda.toFixed(2)}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function exportarPDF() {
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Cabeçalho
+                doc.setFontSize(18);
+                doc.setFont(undefined, 'bold');
+                doc.text('ASSISTÊNCIA GALEGO CELL', 105, 20, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text('Rua Tijuana, 19 - Tel: (84) 98718-1612', 105, 30, { align: 'center' });
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('RELATÓRIO GERENCIAL', 105, 45, { align: 'center' });
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text('Gerado em: ' + new Date().toLocaleString('pt-BR'), 20, 60);
+                
+                // Linha separadora
+                doc.line(20, 65, 190, 65);
+                
+                // Conteúdo do relatório
+                const conteudo = document.getElementById('areaRelatorio').innerText;
+                if (conteudo && conteudo.trim() !== '' && !conteudo.includes('Selecione os filtros')) {
+                    const linhas = doc.splitTextToSize(conteudo, 170);
+                    doc.text(linhas, 20, 75);
+                } else {
+                    doc.text('Nenhum relatório foi gerado. Por favor, gere um relatório primeiro.', 20, 75);
+                }
+                
+                // Rodapé
+                doc.setFontSize(8);
+                doc.text('Sistema de Gestão Galego Cell - Documento gerado automaticamente', 105, 280, { align: 'center' });
+                
+                doc.save(`relatorio-galego-cell-${new Date().toISOString().split('T')[0]}.pdf`);
+                
+                alert('Relatório PDF gerado com sucesso!');
+            } catch (error) {
+                console.error('Erro ao gerar PDF:', error);
+                alert('Erro ao gerar PDF. Verifique se há dados no relatório.');
+            }
+        }
+
+        // Função para gerar comprovante de venda
+        function gerarComprovanteVenda() {
+            if (vendas.length === 0) {
+                alert('Nenhuma venda registrada!');
+                return;
+            }
+            
+            const ultimaVenda = vendas[vendas.length - 1];
+            gerarComprovanteVendaEspecifica(ultimaVenda.id);
+        }
+
+        function gerarComprovanteVendaEspecifica(vendaId) {
+            try {
+                const venda = vendas.find(v => v.id === vendaId);
+                if (!venda) {
+                    alert('Venda não encontrada!');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Cabeçalho da empresa
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('ASSISTÊNCIA GALEGO CELL', 105, 25, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text('Rua Tijuana, 19', 105, 35, { align: 'center' });
+                doc.text('Tel: (84) 98718-1612', 105, 42, { align: 'center' });
+                
+                // Título do comprovante
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text('COMPROVANTE DE VENDA', 105, 60, { align: 'center' });
+                
+                // Linha separadora
+                doc.line(20, 70, 190, 70);
+                
+                // Dados da venda
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                
+                let y = 85;
+                doc.text(`Data/Hora: ${venda.data}`, 20, y);
+                y += 10;
+                doc.text(`Cliente: ${venda.cliente}`, 20, y);
+                y += 15;
+                
+                // Tabela de produtos
+                doc.setFont(undefined, 'bold');
+                doc.text('PRODUTO', 20, y);
+                doc.text('QTD', 120, y);
+                doc.text('VALOR UNIT.', 140, y);
+                doc.text('TOTAL', 170, y);
+                
+                doc.line(20, y + 3, 190, y + 3);
+                y += 12;
+                
+                doc.setFont(undefined, 'normal');
+                const valorUnitario = venda.valor / venda.quantidade;
+                doc.text(venda.produto, 20, y);
+                doc.text(venda.quantidade.toString(), 120, y);
+                doc.text(`R$ ${valorUnitario.toFixed(2)}`, 140, y);
+                doc.text(`R$ ${venda.valor.toFixed(2)}`, 170, y);
+                
+                y += 15;
+                doc.line(20, y, 190, y);
+                
+                // Total
+                y += 10;
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(14);
+                doc.text(`TOTAL GERAL: R$ ${venda.valor.toFixed(2)}`, 170, y, { align: 'right' });
+                
+                y += 15;
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Forma de Pagamento: ${venda.pagamento}`, 20, y);
+                
+                // Rodapé
+                y += 30;
+                doc.setFontSize(10);
+                doc.text('Obrigado pela preferência!', 105, y, { align: 'center' });
+                doc.text('Volte sempre!', 105, y + 8, { align: 'center' });
+                
+                // Assinatura
+                y += 25;
+                doc.line(20, y, 80, y);
+                doc.text('Assinatura do Cliente', 50, y + 8, { align: 'center' });
+                
+                doc.line(110, y, 170, y);
+                doc.text('Galego Cell', 140, y + 8, { align: 'center' });
+                
+                doc.save(`comprovante-venda-${venda.id}.pdf`);
+                
+                alert('Comprovante de venda gerado com sucesso!');
+            } catch (error) {
+                console.error('Erro ao gerar comprovante:', error);
+                alert('Erro ao gerar comprovante. Tente novamente.');
+            }
+        }
+
+        // Função para gerar comprovante de OS
+        function gerarComprovanteOS() {
+            if (ordensServico.length === 0) {
+                alert('Nenhuma ordem de serviço registrada!');
+                return;
+            }
+            
+            const ultimaOS = ordensServico[ordensServico.length - 1];
+            gerarComprovanteOSEspecifica(ultimaOS.id);
+        }
+
+        function gerarComprovanteOSEspecifica(osId) {
+            try {
+                const os = ordensServico.find(o => o.id === osId);
+                if (!os) {
+                    alert('Ordem de serviço não encontrada!');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Cabeçalho da empresa
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('ASSISTÊNCIA GALEGO CELL', 105, 25, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text('Rua Tijuana, 19', 105, 35, { align: 'center' });
+                doc.text('Tel: (84) 98718-1612', 105, 42, { align: 'center' });
+                
+                // Título
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text('ORDEM DE SERVIÇO', 105, 60, { align: 'center' });
+                
+                // Número da OS
+                doc.setFontSize(14);
+                doc.text(`Nº ${os.numero}`, 170, 60);
+                
+                // Linha separadora
+                doc.line(20, 70, 190, 70);
+                
+                // Dados do cliente
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'bold');
+                let y = 85;
+                doc.text('DADOS DO CLIENTE:', 20, y);
+                
+                doc.setFont(undefined, 'normal');
+                y += 10;
+                doc.text(`Nome: ${os.cliente}`, 20, y);
+                y += 8;
+                doc.text(`Telefone: ${os.telefone}`, 20, y);
+                y += 8;
+                doc.text(`Data: ${os.data}`, 20, y);
+                
+                y += 15;
+                
+                // Dados do equipamento
+                doc.setFont(undefined, 'bold');
+                doc.text('DADOS DO EQUIPAMENTO:', 20, y);
+                
+                doc.setFont(undefined, 'normal');
+                y += 10;
+                doc.text(`Equipamento: ${os.equipamento}`, 20, y);
+                
+                y += 15;
+                
+                // Problema relatado
+                doc.setFont(undefined, 'bold');
+                doc.text('PROBLEMA RELATADO:', 20, y);
+                
+                doc.setFont(undefined, 'normal');
+                y += 10;
+                const problemaLinhas = doc.splitTextToSize(os.problema, 170);
+                doc.text(problemaLinhas, 20, y);
+                y += problemaLinhas.length * 6 + 10;
+                
+                // Status e valor
+                doc.setFont(undefined, 'bold');
+                doc.text(`Status: ${os.status}`, 20, y);
+                doc.text(`Valor: R$ ${os.valor.toFixed(2)}`, 120, y);
+                
+                y += 20;
+                
+                // Termos e condições
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text('TERMOS E CONDIÇÕES:', 20, y);
+                y += 8;
+                doc.text('• O prazo de garantia é de 90 dias para serviços realizados.', 20, y);
+                y += 6;
+                doc.text('• Equipamentos não retirados em 90 dias serão considerados abandonados.', 20, y);
+                y += 6;
+                doc.text('• A empresa não se responsabiliza por dados perdidos durante o reparo.', 20, y);
+                
+                y += 20;
+                
+                // Assinaturas
+                doc.line(20, y, 80, y);
+                doc.text('Assinatura do Cliente', 50, y + 8, { align: 'center' });
+                
+                doc.line(110, y, 170, y);
+                doc.text('Galego Cell', 140, y + 8, { align: 'center' });
+                
+                doc.save(`ordem-servico-${os.numero}.pdf`);
+                
+                alert('Ordem de serviço gerada com sucesso!');
+            } catch (error) {
+                console.error('Erro ao gerar OS:', error);
+                alert('Erro ao gerar ordem de serviço. Tente novamente.');
+            }
+        }
+
+        // Funções de Persistência
+        function salvarDados() {
+            localStorage.setItem('galegoCell_vendas', JSON.stringify(vendas));
+            localStorage.setItem('galegoCell_produtos', JSON.stringify(produtos));
+            localStorage.setItem('galegoCell_os', JSON.stringify(ordensServico));
+            localStorage.setItem('galegoCell_transacoes', JSON.stringify(transacoes));
+        }
+
+        function carregarDados() {
+            vendas = JSON.parse(localStorage.getItem('galegoCell_vendas')) || [];
+            produtos = JSON.parse(localStorage.getItem('galegoCell_produtos')) || [];
+            ordensServico = JSON.parse(localStorage.getItem('galegoCell_os')) || [];
+            transacoes = JSON.parse(localStorage.getItem('galegoCell_transacoes')) || [];
+            
+            atualizarListaVendas();
+            atualizarListaProdutos();
+            atualizarListaOS();
+            atualizarListaTransacoes();
+            atualizarResumoFinanceiro();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9719529623eecabb',t:'MTc1NTYwMzA2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
