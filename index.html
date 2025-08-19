@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Galego Cell - Gestão Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .nav-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .nav-btn:hover {
+            background-color: #f3f4f6;
+            transform: translateY(-1px);
+        }
+        .nav-btn.active:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+        }
+        .module {
+            display: none;
+        }
+        .module.active {
+            display: block;
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-2xl">
+        <div class="container mx-auto px-6 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                        <i class="fas fa-mobile-alt text-3xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">ASSISTÊNCIA GALEGO CELL</h1>
+                        <p class="text-sm opacity-90">Sistema de Gestão Profissional</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="flex items-center justify-end mb-1"><i class="fas fa-phone mr-2"></i> (84) 98718-1612</p>
+                    <p class="flex items-center justify-end"><i class="fas fa-map-marker-alt mr-2"></i> Rua Tijuana, 19</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="glass-effect sticky top-0 z-40 shadow-lg">
+        <div class="container mx-auto px-6">
+            <div class="flex space-x-2 overflow-x-auto py-2">
+                <button onclick="mostrarModulo('dashboard')" class="nav-btn active px-6 py-3 text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap">
+                    <i class="fas fa-chart-pie mr-2"></i>Dashboard
+                </button>
+                <button onclick="mostrarModulo('vendas')" class="nav-btn px-6 py-3 text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap">
+                    <i class="fas fa-shopping-cart mr-2"></i>Vendas
+                </button>
+                <button onclick="mostrarModulo('estoque')" class="nav-btn px-6 py-3 text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap">
+                    <i class="fas fa-boxes mr-2"></i>Estoque
+                </button>
+                <button onclick="mostrarModulo('servicos')" class="nav-btn px-6 py-3 text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap">
+                    <i class="fas fa-tools mr-2"></i>Ordens de Serviço
+                </button>
+                <button onclick="mostrarModulo('clientes')" class="nav-btn px-6 py-3 text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap">
+                    <i class="fas fa-users mr-2"></i>Clientes
+                </button>
+                <button onclick="mostrarModulo('financeiro')" class="nav-btn px-6 py-3 text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap">
+                    <i class="fas fa-chart-line mr-2"></i>Financeiro
+                </button>
+                <button onclick="mostrarModulo('relatorios')" class="nav-btn px-6 py-3 text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap">
+                    <i class="fas fa-file-alt mr-2"></i>Relatórios
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Dashboard -->
+        <div id="dashboard" class="module active fade-in">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Dashboard</h2>
+                <p class="text-gray-600">Visão geral do seu negócio</p>
+            </div>
+
+            <!-- Cards de Indicadores -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="glass-effect p-6 rounded-2xl card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">OS Abertas</p>
+                            <p id="dashOSAbertas" class="text-2xl font-bold text-blue-600">0</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-clipboard-list text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-effect p-6 rounded-2xl card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">OS Concluídas Hoje</p>
+                            <p id="dashOSConcluidas" class="text-2xl font-bold text-green-600">0</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-effect p-6 rounded-2xl card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Faturamento Hoje</p>
+                            <p id="dashFaturamento" class="text-2xl font-bold text-purple-600">R$ 0,00</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-dollar-sign text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-effect p-6 rounded-2xl card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Clientes Ativos</p>
+                            <p id="dashClientes" class="text-2xl font-bold text-orange-600">0</p>
+                        </div>
+                        <div class="bg-orange-100 p-3 rounded-full">
+                            <i class="fas fa-users text-orange-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OS Recentes e Alertas -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="glass-effect p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">OS Recentes</h3>
+                    <div id="dashOSRecentes" class="space-y-3">
+                        <p class="text-gray-500 text-center">Nenhuma OS registrada</p>
+                    </div>
+                </div>
+
+                <div class="glass-effect p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Alertas e Notificações</h3>
+                    <div id="dashAlertas" class="space-y-3">
+                        <p class="text-gray-500 text-center">Nenhum alerta no momento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Vendas -->
+        <div id="vendas" class="module">
+            <div class="glass-effect rounded-2xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+                    <i class="fas fa-shopping-cart mr-4 text-blue-600"></i>Sistema de Vendas
+                </h2>
+                
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Formulário de Venda -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-semibold text-gray-700">Nova Venda</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cliente</label>
+                            <input type="text" id="clienteVenda" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="Nome do cliente">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Produto</label>
+                                <select id="produtoVenda" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                                    <option value="">Selecione um produto</option>
+                                    <option value="Película de Vidro">Película de Vidro - R$ 15,00</option>
+                                    <option value="Capinha">Capinha - R$ 25,00</option>
+                                    <option value="Carregador">Carregador - R$ 35,00</option>
+                                    <option value="Fone de Ouvido">Fone de Ouvido - R$ 45,00</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Quantidade</label>
+                                <input type="number" id="quantidadeVenda" min="1" value="1" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Valor Total</label>
+                            <input type="text" id="valorVenda" class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50" readonly>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Forma de Pagamento</label>
+                            <select id="pagamentoVenda" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                                <option value="Dinheiro">Dinheiro</option>
+                                <option value="Cartão de Débito">Cartão de Débito</option>
+                                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                <option value="PIX">PIX</option>
+                            </select>
+                        </div>
+                        
+                        <button onclick="registrarVenda()" class="w-full btn-primary text-white py-3 px-6 rounded-xl font-medium">
+                            <i class="fas fa-plus mr-2"></i>Registrar Venda
+                        </button>
+                    </div>
+                    
+                    <!-- Lista de Vendas -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-6">Vendas do Dia</h3>
+                        <div id="listaVendas" class="space-y-4 max-h-96 overflow-y-auto">
+                            <p class="text-gray-500 text-center">Nenhuma venda registrada hoje</p>
+                        </div>
+                        <div class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
+                            <p class="text-sm text-gray-600">Total do Dia: <span id="totalDia" class="font-bold text-blue-600 text-lg">R$ 0,00</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Estoque -->
+        <div id="estoque" class="module">
+            <div class="glass-effect rounded-2xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+                    <i class="fas fa-boxes mr-4 text-green-600"></i>Controle de Estoque
+                </h2>
+                
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Adicionar Produto -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-semibold text-gray-700">Adicionar Produto</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome do Produto</label>
+                            <input type="text" id="nomeProduto" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all" placeholder="Ex: Película de Vidro iPhone 12">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Código do Produto</label>
+                            <input type="text" id="codigoProduto" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all" placeholder="Ex: PEL001">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Preço de Compra</label>
+                                <input type="number" id="precoCompra" step="0.01" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all" placeholder="0,00">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Preço de Venda</label>
+                                <input type="number" id="precoVenda" step="0.01" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all" placeholder="0,00">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Quantidade</label>
+                            <input type="number" id="quantidadeProduto" min="0" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all" placeholder="0">
+                        </div>
+                        
+                        <button onclick="adicionarProduto()" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 px-6 rounded-xl font-medium hover:from-green-600 hover:to-green-700 transition-all">
+                            <i class="fas fa-plus mr-2"></i>Adicionar ao Estoque
+                        </button>
+                    </div>
+                    
+                    <!-- Lista de Produtos -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-6">Produtos em Estoque</h3>
+                        <div id="listaProdutos" class="space-y-4 max-h-96 overflow-y-auto">
+                            <p class="text-gray-500 text-center">Nenhum produto cadastrado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Ordens de Serviço -->
+        <div id="servicos" class="module">
+            <div class="glass-effect rounded-2xl shadow-xl p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-tools mr-4 text-orange-600"></i>Ordens de Serviço
+                    </h2>
+                    <button onclick="abrirModalNovaOS()" class="btn-primary text-white px-6 py-3 rounded-xl font-medium">
+                        <i class="fas fa-plus mr-2"></i>Nova OS
+                    </button>
+                </div>
+                
+                <!-- Filtros -->
+                <div class="mb-6 flex flex-wrap gap-4">
+                    <select id="filtroStatusOS" onchange="filtrarOS()" class="px-4 py-2 border border-gray-300 rounded-lg">
+                        <option value="">Todos os Status</option>
+                        <option value="Aberta">Aberta</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Aguardando Peça">Aguardando Peça</option>
+                        <option value="Concluída">Concluída</option>
+                        <option value="Entregue">Entregue</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                    <input type="text" id="buscaOS" onkeyup="filtrarOS()" placeholder="Buscar por cliente ou aparelho..." class="px-4 py-2 border border-gray-300 rounded-lg flex-1 min-w-64">
+                </div>
+                
+                <!-- Lista de OS -->
+                <div id="listaOS" class="grid gap-4">
+                    <p class="text-gray-500 text-center">Nenhuma ordem de serviço encontrada</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Clientes -->
+        <div id="clientes" class="module">
+            <div class="glass-effect rounded-2xl shadow-xl p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-users mr-4 text-indigo-600"></i>Gestão de Clientes
+                    </h2>
+                    <button onclick="abrirModalNovoCliente()" class="btn-primary text-white px-6 py-3 rounded-xl font-medium">
+                        <i class="fas fa-user-plus mr-2"></i>Novo Cliente
+                    </button>
+                </div>
+                
+                <!-- Lista de Clientes -->
+                <div id="listaClientes" class="grid gap-4">
+                    <div class="text-center py-12">
+                        <i class="fas fa-users text-6xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500 text-lg">Módulo de Gestão de Clientes</p>
+                        <p class="text-gray-400">Em desenvolvimento - Funcionalidade completa em breve!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Financeiro -->
+        <div id="financeiro" class="module">
+            <div class="glass-effect rounded-2xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+                    <i class="fas fa-chart-line mr-4 text-purple-600"></i>Controle Financeiro
+                </h2>
+                
+                <!-- Cards de Resumo -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl border border-green-200">
+                        <div class="flex items-center">
+                            <div class="bg-green-500 p-3 rounded-full mr-4">
+                                <i class="fas fa-arrow-up text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Receitas</p>
+                                <p id="totalReceitas" class="text-2xl font-bold text-green-600">R$ 0,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-2xl border border-red-200">
+                        <div class="flex items-center">
+                            <div class="bg-red-500 p-3 rounded-full mr-4">
+                                <i class="fas fa-arrow-down text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Despesas</p>
+                                <p id="totalDespesas" class="text-2xl font-bold text-red-600">R$ 0,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
+                        <div class="flex items-center">
+                            <div class="bg-blue-500 p-3 rounded-full mr-4">
+                                <i class="fas fa-wallet text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Saldo</p>
+                                <p id="saldoTotal" class="text-2xl font-bold text-blue-600">R$ 0,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-2xl border border-yellow-200">
+                        <div class="flex items-center">
+                            <div class="bg-yellow-500 p-3 rounded-full mr-4">
+                                <i class="fas fa-chart-bar text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Meta Mensal</p>
+                                <p class="text-2xl font-bold text-yellow-600">R$ 5.000,00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Adicionar Transação -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-semibold text-gray-700">Nova Transação</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+                            <select id="tipoTransacao" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
+                                <option value="receita">Receita</option>
+                                <option value="despesa">Despesa</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+                            <input type="text" id="descricaoTransacao" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all" placeholder="Ex: Venda de capinha">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Valor</label>
+                                <input type="number" id="valorTransacao" step="0.01" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all" placeholder="0,00">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Data</label>
+                                <input type="date" id="dataTransacao" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
+                            </div>
+                        </div>
+                        
+                        <button onclick="adicionarTransacao()" class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 px-6 rounded-xl font-medium hover:from-purple-600 hover:to-purple-700 transition-all">
+                            <i class="fas fa-plus mr-2"></i>Adicionar Transação
+                        </button>
+                    </div>
+                    
+                    <!-- Lista de Transações -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-6">Transações Recentes</h3>
+                        <div id="listaTransacoes" class="space-y-4 max-h-96 overflow-y-auto">
+                            <p class="text-gray-500 text-center">Nenhuma transação registrada</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo Relatórios -->
+        <div id="relatorios" class="module">
+            <div class="glass-effect rounded-2xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+                    <i class="fas fa-file-alt mr-4 text-indigo-600"></i>Relatórios
+                </h2>
+                
+                <div class="text-center py-12">
+                    <i class="fas fa-chart-bar text-6xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500 text-lg">Módulo de Relatórios</p>
+                    <p class="text-gray-400">Em desenvolvimento - Funcionalidade completa em breve!</p>
+                    <div class="mt-8 space-y-4">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-blue-800">Relatórios Disponíveis em Breve:</h4>
+                            <ul class="text-blue-600 text-sm mt-2 space-y-1">
+                                <li>• Relatório de Vendas por Período</li>
+                                <li>• Relatório de Ordens de Serviço</li>
+                                <li>• Relatório Financeiro Completo</li>
+                                <li>• Relatório de Estoque</li>
+                                <li>• Relatório de Clientes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Nova OS -->
+    <div id="modalNovaOS" class="modal">
+        <div class="modal-content max-w-4xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Nova Ordem de Serviço</h3>
+                <button onclick="fecharModal('modalNovaOS')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            
+            <form id="formNovaOS" class="space-y-6">
+                <!-- Dados do Cliente -->
+                <div class="bg-blue-50 p-6 rounded-xl">
+                    <h4 class="text-lg font-semibold text-blue-800 mb-4">Dados do Cliente</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome Completo *</label>
+                            <input type="text" id="nomeCliente" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Telefone *</label>
+                            <input type="tel" id="telefoneCliente" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="(84) 99999-9999">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">CPF/CNPJ</label>
+                            <input type="text" id="cpfCliente" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="000.000.000-00">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">E-mail</label>
+                            <input type="email" id="emailCliente" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Endereço</label>
+                            <input type="text" id="enderecoCliente" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dados do Aparelho -->
+                <div class="bg-green-50 p-6 rounded-xl">
+                    <h4 class="text-lg font-semibold text-green-800 mb-4">Dados do Aparelho</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Marca *</label>
+                            <input type="text" id="marcaAparelho" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Ex: Samsung, Apple, Xiaomi">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Modelo *</label>
+                            <input type="text" id="modeloAparelho" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Ex: Galaxy S21, iPhone 12">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">IMEI/Número de Série</label>
+                            <input type="text" id="imeiAparelho" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cor</label>
+                            <input type="text" id="corAparelho" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Acessórios Entregues</label>
+                            <textarea id="acessoriosAparelho" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Ex: Carregador, fone de ouvido, capa..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Defeito e Diagnóstico -->
+                <div class="bg-orange-50 p-6 rounded-xl">
+                    <h4 class="text-lg font-semibold text-orange-800 mb-4">Defeito e Diagnóstico</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Defeito Relatado pelo Cliente *</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+                                <button type="button" onclick="adicionarDefeitoRapido('Tela quebrada')" class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Tela quebrada</button>
+                                <button type="button" onclick="adicionarDefeitoRapido('Não liga')" class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Não liga</button>
+                                <button type="button" onclick="adicionarDefeitoRapido('Bateria viciada')" class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Bateria viciada</button>
+                                <button type="button" onclick="adicionarDefeitoRapido('Não carrega')" class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Não carrega</button>
+                                <button type="button" onclick="adicionarDefeitoRapido('Sem som')" class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Sem som</button>
+                                <button type="button" onclick="adicionarDefeitoRapido('Câmera não funciona')" class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Câmera não funciona</button>
+                                <button type="button" onclick="adicionarDefeitoRapido('Travando')" class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Travando</button>
+                                <button type="button" onclick="adicionarDefeitoRapido('Molhou')" class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Molhou</button>
+                            </div>
+                            <textarea id="defeitoRelatado" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="Descreva o problema relatado pelo cliente..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Diagnóstico Inicial do Técnico</label>
+                            <textarea id="diagnosticoInicial" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="Diagnóstico inicial após análise..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orçamento Inicial -->
+                <div class="bg-purple-50 p-6 rounded-xl">
+                    <h4 class="text-lg font-semibold text-purple-800 mb-4">Orçamento Inicial</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Valor da Mão de Obra</label>
+                            <input type="number" id="valorMaoObra" step="0.01" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="0,00">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Prazo Estimado (dias)</label>
+                            <input type="number" id="prazoEstimado" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Garantia (dias)</label>
+                            <input type="number" id="garantiaDias" value="90" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="fecharModal('modalNovaOS')" class="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50">Cancelar</button>
+                    <button type="submit" class="btn-primary text-white px-6 py-3 rounded-xl">Criar Ordem de Serviço</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Editar OS -->
+    <div id="modalEditarOS" class="modal">
+        <div class="modal-content max-w-5xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Editar OS #<span id="numeroOSEdicao"></span></h3>
+                <button onclick="fecharModal('modalEditarOS')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Informações da OS -->
+                <div class="space-y-6">
+                    <div class="bg-blue-50 p-4 rounded-xl">
+                        <h4 class="font-semibold text-blue-800 mb-3">Status da OS</h4>
+                        <select id="statusOSEdicao" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="Aberta">Aberta</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Aguardando Peça">Aguardando Peça</option>
+                            <option value="Concluída">Concluída</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-xl">
+                        <h4 class="font-semibold text-green-800 mb-3">Serviços Realizados</h4>
+                        <div id="servicosRealizados" class="space-y-3 mb-4">
+                            <!-- Serviços serão listados aqui -->
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="novoServico" placeholder="Descrição do serviço" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg">
+                            <input type="number" id="valorNovoServico" placeholder="Valor" step="0.01" class="w-24 px-3 py-2 border border-gray-300 rounded-lg">
+                            <button type="button" onclick="adicionarServico()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-xl">
+                        <h4 class="font-semibold text-orange-800 mb-3">Peças Utilizadas</h4>
+                        <div id="pecasUtilizadas" class="space-y-3 mb-4">
+                            <!-- Peças serão listadas aqui -->
+                        </div>
+                        <div class="grid grid-cols-12 gap-2">
+                            <select id="novaPeca" class="col-span-4 px-3 py-2 border border-gray-300 rounded-lg">
+                                <option value="">Selecionar peça</option>
+                            </select>
+                            <input type="number" id="quantidadeNovaPeca" placeholder="Qtd" min="1" value="1" class="col-span-2 px-3 py-2 border border-gray-300 rounded-lg">
+                            <input type="number" id="precoNovaPeca" placeholder="Preço" step="0.01" class="col-span-3 px-3 py-2 border border-gray-300 rounded-lg">
+                            <button type="button" onclick="adicionarPeca()" class="col-span-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <h4 class="font-semibold text-gray-800 mb-3">Observações Finais</h4>
+                        <textarea id="observacoesFinais" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500" placeholder="Observações sobre o serviço realizado..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Resumo Financeiro -->
+                <div class="space-y-6">
+                    <div class="bg-purple-50 p-4 rounded-xl">
+                        <h4 class="font-semibold text-purple-800 mb-4">Resumo Financeiro</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span>Mão de Obra:</span>
+                                <span id="totalMaoObra" class="font-semibold">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Peças:</span>
+                                <span id="totalPecas" class="font-semibold">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Subtotal:</span>
+                                <span id="subtotalOS" class="font-semibold">R$ 0,00</span>
+                            </div>
+                            <div class="border-t pt-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Desconto</label>
+                                <input type="number" id="descontoOS" step="0.01" onchange="calcularTotalOS()" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="0,00">
+                            </div>
+                            <div class="border-t pt-2 flex justify-between text-lg font-bold">
+                                <span>Total Final:</span>
+                                <span id="totalFinalOS" class="text-green-600">R$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-xl">
+                        <h4 class="font-semibold text-yellow-800 mb-3">Informações do Cliente</h4>
+                        <div id="infoClienteOS" class="text-sm space-y-1">
+                            <!-- Informações do cliente serão exibidas aqui -->
+                        </div>
+                    </div>
+
+                    <div class="bg-indigo-50 p-4 rounded-xl">
+                        <h4 class="font-semibold text-indigo-800 mb-3">Informações do Aparelho</h4>
+                        <div id="infoAparelhoOS" class="text-sm space-y-1">
+                            <!-- Informações do aparelho serão exibidas aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between mt-8">
+                <div class="space-x-2">
+                    <button onclick="gerarComprovanteOS()" class="px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600">
+                        <i class="fas fa-file-pdf mr-2"></i>Gerar PDF
+                    </button>
+                    <button onclick="imprimirOS()" class="px-6 py-3 bg-gray-500 text-white rounded-xl hover:bg-gray-600">
+                        <i class="fas fa-print mr-2"></i>Imprimir
+                    </button>
+                </div>
+                <div class="space-x-2">
+                    <button onclick="fecharModal('modalEditarOS')" class="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50">Cancelar</button>
+                    <button onclick="salvarEdicaoOS()" class="btn-primary text-white px-6 py-3 rounded-xl">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados em memória
+        let vendas = [];
+        let produtos = [];
+        let ordensServico = [];
+        let clientes = [];
+        let transacoes = [];
+
+        // Função principal de navegação - SUPER SIMPLES
+        function mostrarModulo(nomeModulo) {
+            console.log('Navegando para:', nomeModulo);
+            
+            // Esconder todos os módulos
+            const modulos = document.querySelectorAll('.module');
+            modulos.forEach(modulo => {
+                modulo.classList.remove('active', 'fade-in');
+            });
+            
+            // Remover active de todos os botões
+            const botoes = document.querySelectorAll('.nav-btn');
+            botoes.forEach(botao => {
+                botao.classList.remove('active');
+            });
+            
+            // Mostrar módulo selecionado
+            const moduloAtivo = document.getElementById(nomeModulo);
+            if (moduloAtivo) {
+                moduloAtivo.classList.add('active', 'fade-in');
+            }
+            
+            // Ativar botão correspondente
+            const botaoAtivo = event.target;
+            if (botaoAtivo) {
+                botaoAtivo.classList.add('active');
+            }
+            
+            // Atualizar dados do módulo
+            atualizarModulo(nomeModulo);
+        }
+
+        function atualizarModulo(nomeModulo) {
+            switch(nomeModulo) {
+                case 'dashboard':
+                    atualizarDashboard();
+                    break;
+                case 'vendas':
+                    atualizarListaVendas();
+                    break;
+                case 'estoque':
+                    atualizarListaProdutos();
+                    break;
+                case 'servicos':
+                    atualizarListaOS();
+                    break;
+                case 'clientes':
+                    atualizarListaClientes();
+                    break;
+                case 'financeiro':
+                    atualizarListaTransacoes();
+                    atualizarResumoFinanceiro();
+                    break;
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Sistema iniciando...');
+            
+            // Definir data atual
+            const hoje = new Date().toISOString().split('T')[0];
+            const dataTransacao = document.getElementById('dataTransacao');
+            
+            if (dataTransacao) dataTransacao.value = hoje;
+            
+            // Carregar dados
+            carregarDados();
+            
+            // Configurar eventos
+            configurarEventos();
+            
+            // Atualizar dashboard
+            atualizarDashboard();
+            
+            console.log('Sistema iniciado!');
+        });
+
+        function configurarEventos() {
+            // Cálculo automático de vendas
+            document.getElementById('produtoVenda').addEventListener('change', calcularValorVenda);
+            document.getElementById('quantidadeVenda').addEventListener('input', calcularValorVenda);
+        }
+
+        // Funções do Dashboard
+        function atualizarDashboard() {
+            const hoje = new Date().toISOString().split('T')[0];
+            
+            // OS Abertas
+            const osAbertas = ordensServico.filter(os => 
+                os.status !== 'Entregue' && os.status !== 'Cancelada'
+            ).length;
+            document.getElementById('dashOSAbertas').textContent = osAbertas;
+            
+            // OS Concluídas hoje
+            const osConcluidas = ordensServico.filter(os => 
+                os.dataConclusao === hoje
+            ).length;
+            document.getElementById('dashOSConcluidas').textContent = osConcluidas;
+            
+            // Faturamento hoje
+            const faturamentoHoje = vendas.filter(v => 
+                v.data.includes(new Date().toLocaleDateString('pt-BR'))
+            ).reduce((total, v) => total + v.valor, 0);
+            document.getElementById('dashFaturamento').textContent = `R$ ${faturamentoHoje.toFixed(2)}`;
+            
+            // Clientes ativos
+            document.getElementById('dashClientes').textContent = clientes.length;
+        }
+
+        // Funções de Vendas
+        function calcularValorVenda() {
+            const produto = document.getElementById('produtoVenda').value;
+            const quantidade = parseInt(document.getElementById('quantidadeVenda').value) || 0;
+            
+            let preco = 0;
+            if (produto.includes('15,00')) preco = 15;
+            else if (produto.includes('25,00')) preco = 25;
+            else if (produto.includes('35,00')) preco = 35;
+            else if (produto.includes('45,00')) preco = 45;
+            
+            const total = preco * quantidade;
+            document.getElementById('valorVenda').value = `R$ ${total.toFixed(2)}`;
+        }
+
+        function registrarVenda() {
+            const cliente = document.getElementById('clienteVenda').value;
+            const produto = document.getElementById('produtoVenda').value;
+            const quantidade = parseInt(document.getElementById('quantidadeVenda').value);
+            const valor = parseFloat(document.getElementById('valorVenda').value.replace('R$ ', ''));
+            const pagamento = document.getElementById('pagamentoVenda').value;
+            
+            if (!cliente || !produto || !quantidade || !valor) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+            
+            const venda = {
+                id: Date.now(),
+                cliente,
+                produto: produto.split(' - ')[0],
+                quantidade,
+                valor,
+                pagamento,
+                data: new Date().toLocaleString('pt-BR')
+            };
+            
+            vendas.push(venda);
+            
+            // Adicionar automaticamente como receita
+            const transacao = {
+                id: Date.now() + 1,
+                tipo: 'receita',
+                descricao: `Venda: ${venda.produto}`,
+                valor: venda.valor,
+                data: new Date().toISOString().split('T')[0]
+            };
+            transacoes.push(transacao);
+            
+            salvarDados();
+            atualizarListaVendas();
+            atualizarResumoFinanceiro();
+            atualizarDashboard();
+            limparFormularioVenda();
+            
+            alert('Venda registrada com sucesso!');
+        }
+
+        function atualizarListaVendas() {
+            const lista = document.getElementById('listaVendas');
+            const vendasHoje = vendas.filter(v => v.data.includes(new Date().toLocaleDateString('pt-BR')));
+            
+            if (vendasHoje.length === 0) {
+                lista.innerHTML = '<p class="text-gray-500 text-center">Nenhuma venda registrada hoje</p>';
+            } else {
+                lista.innerHTML = vendasHoje.map(venda => `
+                    <div class="glass-effect p-4 rounded-xl card-hover">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-medium text-gray-800">${venda.cliente}</p>
+                                <p class="text-sm text-gray-600">${venda.produto} (${venda.quantidade}x)</p>
+                                <p class="text-xs text-gray-500">${venda.pagamento}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-green-600">R$ ${venda.valor.toFixed(2)}</p>
+                                <p class="text-xs text-gray-500">${venda.data}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            const total = vendasHoje.reduce((sum, venda) => sum + venda.valor, 0);
+            document.getElementById('totalDia').textContent = `R$ ${total.toFixed(2)}`;
+        }
+
+        function limparFormularioVenda() {
+            document.getElementById('clienteVenda').value = '';
+            document.getElementById('produtoVenda').value = '';
+            document.getElementById('quantidadeVenda').value = '1';
+            document.getElementById('valorVenda').value = '';
+        }
+
+        // Funções de Estoque
+        function adicionarProduto() {
+            const nome = document.getElementById('nomeProduto').value;
+            const codigo = document.getElementById('codigoProduto').value;
+            const precoCompra = parseFloat(document.getElementById('precoCompra').value);
+            const precoVenda = parseFloat(document.getElementById('precoVenda').value);
+            const quantidade = parseInt(document.getElementById('quantidadeProduto').value);
+            
+            if (!nome || !precoCompra || !precoVenda || quantidade < 0) {
+                alert('Por favor, preencha todos os campos corretamente!');
+                return;
+            }
+            
+            const produto = {
+                id: Date.now(),
+                nome,
+                codigo: codigo || `PROD${Date.now()}`,
+                precoCompra,
+                precoVenda,
+                quantidade,
+                data: new Date().toLocaleString('pt-BR')
+            };
+            
+            produtos.push(produto);
+            salvarDados();
+            atualizarListaProdutos();
+            limparFormularioProduto();
+            
+            alert('Produto adicionado com sucesso!');
+        }
+
+        function atualizarListaProdutos() {
+            const lista = document.getElementById('listaProdutos');
+            
+            if (produtos.length === 0) {
+                lista.innerHTML = '<p class="text-gray-500 text-center">Nenhum produto cadastrado</p>';
+            } else {
+                lista.innerHTML = produtos.map(produto => `
+                    <div class="glass-effect p-4 rounded-xl card-hover">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-800">${produto.nome}</p>
+                                <p class="text-sm text-gray-600">Código: ${produto.codigo}</p>
+                                <p class="text-sm text-gray-600">Compra: R$ ${produto.precoCompra.toFixed(2)} | Venda: R$ ${produto.precoVenda.toFixed(2)}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold ${produto.quantidade > 10 ? 'text-green-600' : produto.quantidade > 5 ? 'text-yellow-600' : 'text-red-600'}">
+                                    ${produto.quantidade} unidades
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function limparFormularioProduto() {
+            document.getElementById('nomeProduto').value = '';
+            document.getElementById('codigoProduto').value = '';
+            document.getElementById('precoCompra').value = '';
+            document.getElementById('precoVenda').value = '';
+            document.getElementById('quantidadeProduto').value = '';
+        }
+
+        // Funções de OS
+        let osAtual = null;
+
+        function abrirModalNovaOS() {
+            document.getElementById('modalNovaOS').classList.add('active');
+            document.getElementById('formNovaOS').reset();
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function adicionarDefeitoRapido(defeito) {
+            const textarea = document.getElementById('defeitoRelatado');
+            if (textarea.value) {
+                textarea.value += ', ' + defeito;
+            } else {
+                textarea.value = defeito;
+            }
+        }
+
+        document.getElementById('formNovaOS').addEventListener('submit', function(e) {
+            e.preventDefault();
+            criarNovaOS();
+        });
+
+        function criarNovaOS() {
+            const os = {
+                id: Date.now(),
+                numero: `OS${String(ordensServico.length + 1).padStart(4, '0')}`,
+                dataAbertura: new Date().toISOString().split('T')[0],
+                status: 'Aberta',
+                cliente: {
+                    nome: document.getElementById('nomeCliente').value,
+                    telefone: document.getElementById('telefoneCliente').value,
+                    cpf: document.getElementById('cpfCliente').value,
+                    email: document.getElementById('emailCliente').value,
+                    endereco: document.getElementById('enderecoCliente').value
+                },
+                aparelho: {
+                    marca: document.getElementById('marcaAparelho').value,
+                    modelo: document.getElementById('modeloAparelho').value,
+                    imei: document.getElementById('imeiAparelho').value,
+                    cor: document.getElementById('corAparelho').value,
+                    acessorios: document.getElementById('acessoriosAparelho').value
+                },
+                defeitoRelatado: document.getElementById('defeitoRelatado').value,
+                diagnosticoInicial: document.getElementById('diagnosticoInicial').value,
+                valorMaoObra: parseFloat(document.getElementById('valorMaoObra').value) || 0,
+                prazoEstimado: parseInt(document.getElementById('prazoEstimado').value) || 1,
+                garantiaDias: parseInt(document.getElementById('garantiaDias').value) || 90,
+                servicos: [],
+                pecas: [],
+                observacoes: '',
+                desconto: 0,
+                totalFinal: 0
+            };
+
+            ordensServico.push(os);
+            
+            // Adicionar cliente se não existir
+            if (!clientes.find(c => c.telefone === os.cliente.telefone)) {
+                clientes.push({
+                    id: Date.now() + 1,
+                    nome: os.cliente.nome,
+                    telefone: os.cliente.telefone,
+                    cpf: os.cliente.cpf,
+                    email: os.cliente.email,
+                    endereco: os.cliente.endereco,
+                    dataCadastro: new Date().toISOString().split('T')[0]
+                });
+            }
+
+            salvarDados();
+            atualizarListaOS();
+            atualizarDashboard();
+            fecharModal('modalNovaOS');
+            
+            alert(`OS ${os.numero} criada com sucesso!`);
+        }
+
+        function atualizarListaOS() {
+            const lista = document.getElementById('listaOS');
+            const filtroStatus = document.getElementById('filtroStatusOS')?.value || '';
+            const busca = document.getElementById('buscaOS')?.value.toLowerCase() || '';
+            
+            let osFiltradas = ordensServico;
+            
+            if (filtroStatus) {
+                osFiltradas = osFiltradas.filter(os => os.status === filtroStatus);
+            }
+            
+            if (busca) {
+                osFiltradas = osFiltradas.filter(os => 
+                    os.cliente.nome.toLowerCase().includes(busca) ||
+                    os.aparelho.marca.toLowerCase().includes(busca) ||
+                    os.aparelho.modelo.toLowerCase().includes(busca) ||
+                    os.numero.toLowerCase().includes(busca)
+                );
+            }
+            
+            if (osFiltradas.length === 0) {
+                lista.innerHTML = '<p class="text-gray-500 text-center">Nenhuma ordem de serviço encontrada</p>';
+            } else {
+                lista.innerHTML = osFiltradas.map(os => {
+                    const statusColor = {
+                        'Aberta': 'bg-blue-100 text-blue-800',
+                        'Em Andamento': 'bg-yellow-100 text-yellow-800',
+                        'Aguardando Peça': 'bg-orange-100 text-orange-800',
+                        'Concluída': 'bg-green-100 text-green-800',
+                        'Entregue': 'bg-purple-100 text-purple-800',
+                        'Cancelada': 'bg-red-100 text-red-800'
+                    };
+                    
+                    return `
+                        <div class="glass-effect p-6 rounded-xl card-hover">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-800">${os.numero}</h4>
+                                    <p class="text-sm text-gray-600">${os.cliente.nome} - ${os.cliente.telefone}</p>
+                                </div>
+                                <span class="status-badge ${statusColor[os.status] || 'bg-gray-100 text-gray-800'}">${os.status}</span>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <p class="text-sm text-gray-600"><strong>Aparelho:</strong> ${os.aparelho.marca} ${os.aparelho.modelo}</p>
+                                    <p class="text-sm text-gray-600"><strong>Defeito:</strong> ${os.defeitoRelatado.substring(0, 50)}${os.defeitoRelatado.length > 50 ? '...' : ''}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600"><strong>Abertura:</strong> ${new Date(os.dataAbertura).toLocaleDateString('pt-BR')}</p>
+                                    <p class="text-sm text-gray-600"><strong>Prazo:</strong> ${os.prazoEstimado} dias</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <div class="text-lg font-bold text-green-600">
+                                    R$ ${(os.totalFinal || os.valorMaoObra).toFixed(2)}
+                                </div>
+                                <div class="space-x-2">
+                                    <button onclick="editarOS(${os.id})" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm">
+                                        <i class="fas fa-edit mr-1"></i>Editar
+                                    </button>
+                                    <button onclick="gerarComprovanteOS(${os.id})" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm">
+                                        <i class="fas fa-file-pdf mr-1"></i>PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function filtrarOS() {
+            atualizarListaOS();
+        }
+
+        function editarOS(osId) {
+            osAtual = ordensServico.find(os => os.id === osId);
+            if (!osAtual) return;
+            
+            document.getElementById('numeroOSEdicao').textContent = osAtual.numero;
+            document.getElementById('statusOSEdicao').value = osAtual.status;
+            document.getElementById('observacoesFinais').value = osAtual.observacoes || '';
+            document.getElementById('descontoOS').value = osAtual.desconto || 0;
+            
+            // Preencher informações do cliente
+            document.getElementById('infoClienteOS').innerHTML = `
+                <p><strong>Nome:</strong> ${osAtual.cliente.nome}</p>
+                <p><strong>Telefone:</strong> ${osAtual.cliente.telefone}</p>
+                <p><strong>CPF:</strong> ${osAtual.cliente.cpf || 'Não informado'}</p>
+                <p><strong>E-mail:</strong> ${osAtual.cliente.email || 'Não informado'}</p>
+            `;
+            
+            // Preencher informações do aparelho
+            document.getElementById('infoAparelhoOS').innerHTML = `
+                <p><strong>Marca:</strong> ${osAtual.aparelho.marca}</p>
+                <p><strong>Modelo:</strong> ${osAtual.aparelho.modelo}</p>
+                <p><strong>IMEI:</strong> ${osAtual.aparelho.imei || 'Não informado'}</p>
+                <p><strong>Cor:</strong> ${osAtual.aparelho.cor || 'Não informado'}</p>
+            `;
+            
+            // Preencher select de peças
+            const selectPecas = document.getElementById('novaPeca');
+            selectPecas.innerHTML = '<option value="">Selecionar peça</option>' + 
+                produtos.map(p => `<option value="${p.id}">${p.nome} - R$ ${p.precoVenda.toFixed(2)}</option>`).join('');
+            
+            atualizarServicosRealizados();
+            atualizarPecasUtilizadas();
+            calcularTotalOS();
+            
+            document.getElementById('modalEditarOS').classList.add('active');
+        }
+
+        function atualizarServicosRealizados() {
+            const container = document.getElementById('servicosRealizados');
+            if (!osAtual.servicos || osAtual.servicos.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Nenhum serviço adicionado</p>';
+            } else {
+                container.innerHTML = osAtual.servicos.map((servico, index) => `
+                    <div class="flex justify-between items-center bg-white p-3 rounded-lg border">
+                        <span>${servico.descricao}</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-semibold">R$ ${servico.valor.toFixed(2)}</span>
+                            <button onclick="removerServico(${index})" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function atualizarPecasUtilizadas() {
+            const container = document.getElementById('pecasUtilizadas');
+            if (!osAtual.pecas || osAtual.pecas.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Nenhuma peça adicionada</p>';
+            } else {
+                container.innerHTML = osAtual.pecas.map((peca, index) => `
+                    <div class="flex justify-between items-center bg-white p-3 rounded-lg border">
+                        <div>
+                            <span>${peca.nome}</span>
+                            <span class="text-sm text-gray-600">(${peca.quantidade}x)</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-semibold">R$ ${(peca.quantidade * peca.preco).toFixed(2)}</span>
+                            <button onclick="removerPeca(${index})" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function adicionarServico() {
+            const descricao = document.getElementById('novoServico').value;
+            const valor = parseFloat(document.getElementById('valorNovoServico').value);
+            
+            if (!descricao || !valor) {
+                alert('Preencha a descrição e o valor do serviço!');
+                return;
+            }
+            
+            if (!osAtual.servicos) osAtual.servicos = [];
+            osAtual.servicos.push({ descricao, valor });
+            
+            document.getElementById('novoServico').value = '';
+            document.getElementById('valorNovoServico').value = '';
+            
+            atualizarServicosRealizados();
+            calcularTotalOS();
+        }
+
+        function adicionarPeca() {
+            const pecaId = document.getElementById('novaPeca').value;
+            const quantidade = parseInt(document.getElementById('quantidadeNovaPeca').value);
+            const preco = parseFloat(document.getElementById('precoNovaPeca').value);
+            
+            if (!pecaId || !quantidade || !preco) {
+                alert('Selecione a peça, quantidade e preço!');
+                return;
+            }
+            
+            const produto = produtos.find(p => p.id == pecaId);
+            if (!produto) {
+                alert('Produto não encontrado!');
+                return;
+            }
+            
+            if (produto.quantidade < quantidade) {
+                alert(`Estoque insuficiente! Disponível: ${produto.quantidade}`);
+                return;
+            }
+            
+            if (!osAtual.pecas) osAtual.pecas = [];
+            osAtual.pecas.push({
+                id: pecaId,
+                nome: produto.nome,
+                quantidade,
+                preco
+            });
+            
+            // Atualizar estoque
+            produto.quantidade -= quantidade;
+            
+            document.getElementById('novaPeca').value = '';
+            document.getElementById('quantidadeNovaPeca').value = '1';
+            document.getElementById('precoNovaPeca').value = '';
+            
+            atualizarPecasUtilizadas();
+            calcularTotalOS();
+        }
+
+        function removerServico(index) {
+            osAtual.servicos.splice(index, 1);
+            atualizarServicosRealizados();
+            calcularTotalOS();
+        }
+
+        function removerPeca(index) {
+            const peca = osAtual.pecas[index];
+            
+            // Devolver ao estoque
+            const produto = produtos.find(p => p.id == peca.id);
+            if (produto) {
+                produto.quantidade += peca.quantidade;
+            }
+            
+            osAtual.pecas.splice(index, 1);
+            atualizarPecasUtilizadas();
+            calcularTotalOS();
+        }
+
+        function calcularTotalOS() {
+            if (!osAtual) return;
+            
+            const totalServicos = (osAtual.servicos || []).reduce((sum, s) => sum + s.valor, 0);
+            const totalPecas = (osAtual.pecas || []).reduce((sum, p) => sum + (p.quantidade * p.preco), 0);
+            const totalMaoObra = osAtual.valorMaoObra || 0;
+            const desconto = parseFloat(document.getElementById('descontoOS').value) || 0;
+            
+            const subtotal = totalMaoObra + totalServicos + totalPecas;
+            const totalFinal = subtotal - desconto;
+            
+            document.getElementById('totalMaoObra').textContent = `R$ ${(totalMaoObra + totalServicos).toFixed(2)}`;
+            document.getElementById('totalPecas').textContent = `R$ ${totalPecas.toFixed(2)}`;
+            document.getElementById('subtotalOS').textContent = `R$ ${subtotal.toFixed(2)}`;
+            document.getElementById('totalFinalOS').textContent = `R$ ${totalFinal.toFixed(2)}`;
+        }
+
+        function salvarEdicaoOS() {
+            if (!osAtual) return;
+            
+            osAtual.status = document.getElementById('statusOSEdicao').value;
+            osAtual.observacoes = document.getElementById('observacoesFinais').value;
+            osAtual.desconto = parseFloat(document.getElementById('descontoOS').value) || 0;
+            
+            const totalServicos = (osAtual.servicos || []).reduce((sum, s) => sum + s.valor, 0);
+            const totalPecas = (osAtual.pecas || []).reduce((sum, p) => sum + (p.quantidade * p.preco), 0);
+            const subtotal = (osAtual.valorMaoObra || 0) + totalServicos + totalPecas;
+            osAtual.totalFinal = subtotal - osAtual.desconto;
+            
+            if (osAtual.status === 'Concluída' || osAtual.status === 'Entregue') {
+                osAtual.dataConclusao = new Date().toISOString().split('T')[0];
+                
+                // Adicionar receita automaticamente
+                const transacao = {
+                    id: Date.now(),
+                    tipo: 'receita',
+                    descricao: `OS ${osAtual.numero} - ${osAtual.cliente.nome}`,
+                    valor: osAtual.totalFinal,
+                    data: osAtual.dataConclusao
+                };
+                transacoes.push(transacao);
+            }
+            
+            salvarDados();
+            atualizarListaOS();
+            atualizarDashboard();
+            atualizarResumoFinanceiro();
+            fecharModal('modalEditarOS');
+            
+            alert('OS atualizada com sucesso!');
+        }
+
+        function gerarComprovanteOS(osId = null) {
+            const os = osId ? ordensServico.find(o => o.id === osId) : osAtual;
+            if (!os) return;
+            
+            // Criar PDF usando jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Cabeçalho
+            doc.setFontSize(20);
+            doc.text('ASSISTÊNCIA GALEGO CELL', 20, 20);
+            doc.setFontSize(12);
+            doc.text('Rua Tijuana, 19 - Telefone: (84) 98718-1612', 20, 30);
+            
+            // Linha separadora
+            doc.line(20, 35, 190, 35);
+            
+            // Informações da OS
+            doc.setFontSize(16);
+            doc.text(`ORDEM DE SERVIÇO - ${os.numero}`, 20, 50);
+            
+            doc.setFontSize(12);
+            doc.text(`Data de Abertura: ${new Date(os.dataAbertura).toLocaleDateString('pt-BR')}`, 20, 60);
+            doc.text(`Status: ${os.status}`, 120, 60);
+            
+            // Dados do Cliente
+            doc.setFontSize(14);
+            doc.text('DADOS DO CLIENTE', 20, 80);
+            doc.setFontSize(12);
+            doc.text(`Nome: ${os.cliente.nome}`, 20, 90);
+            doc.text(`Telefone: ${os.cliente.telefone}`, 20, 100);
+            if (os.cliente.cpf) doc.text(`CPF: ${os.cliente.cpf}`, 120, 100);
+            
+            // Dados do Aparelho
+            doc.setFontSize(14);
+            doc.text('DADOS DO APARELHO', 20, 120);
+            doc.setFontSize(12);
+            doc.text(`Marca/Modelo: ${os.aparelho.marca} ${os.aparelho.modelo}`, 20, 130);
+            if (os.aparelho.imei) doc.text(`IMEI: ${os.aparelho.imei}`, 20, 140);
+            
+            // Defeito
+            doc.setFontSize(14);
+            doc.text('DEFEITO RELATADO', 20, 160);
+            doc.setFontSize(12);
+            const defeitoLines = doc.splitTextToSize(os.defeitoRelatado, 170);
+            doc.text(defeitoLines, 20, 170);
+            
+            let yPos = 170 + (defeitoLines.length * 10) + 20;
+            
+            // Serviços e Valores
+            doc.setFontSize(14);
+            doc.text('SERVIÇOS E VALORES', 20, yPos);
+            yPos += 15;
+            
+            doc.setFontSize(12);
+            doc.text(`Mão de Obra: R$ ${(os.valorMaoObra || 0).toFixed(2)}`, 20, yPos);
+            yPos += 10;
+            
+            if (os.servicos && os.servicos.length > 0) {
+                os.servicos.forEach(servico => {
+                    doc.text(`${servico.descricao}: R$ ${servico.valor.toFixed(2)}`, 20, yPos);
+                    yPos += 10;
+                });
+            }
+            
+            if (os.pecas && os.pecas.length > 0) {
+                doc.text('Peças:', 20, yPos);
+                yPos += 10;
+                os.pecas.forEach(peca => {
+                    doc.text(`${peca.nome} (${peca.quantidade}x): R$ ${(peca.quantidade * peca.preco).toFixed(2)}`, 25, yPos);
+                    yPos += 10;
+                });
+            }
+            
+            // Total
+            yPos += 10;
+            doc.line(20, yPos, 190, yPos);
+            yPos += 10;
+            doc.setFontSize(14);
+            doc.text(`TOTAL: R$ ${(os.totalFinal || os.valorMaoObra || 0).toFixed(2)}`, 20, yPos);
+            
+            // Garantia
+            yPos += 20;
+            doc.setFontSize(12);
+            doc.text(`Garantia: ${os.garantiaDias} dias`, 20, yPos);
+            
+            // Salvar PDF
+            doc.save(`OS_${os.numero}.pdf`);
+        }
+
+        function imprimirOS() {
+            if (!osAtual) return;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>OS ${osAtual.numero}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; }
+                        .section { margin: 20px 0; }
+                        .section h3 { background: #f0f0f0; padding: 5px; margin: 0; }
+                        .info { padding: 10px; }
+                        .total { font-size: 18px; font-weight: bold; text-align: right; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>ASSISTÊNCIA GALEGO CELL</h1>
+                        <p>Rua Tijuana, 19 - Telefone: (84) 98718-1612</p>
+                        <h2>ORDEM DE SERVIÇO - ${osAtual.numero}</h2>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>DADOS DO CLIENTE</h3>
+                        <div class="info">
+                            <p><strong>Nome:</strong> ${osAtual.cliente.nome}</p>
+                            <p><strong>Telefone:</strong> ${osAtual.cliente.telefone}</p>
+                            ${osAtual.cliente.cpf ? `<p><strong>CPF:</strong> ${osAtual.cliente.cpf}</p>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>DADOS DO APARELHO</h3>
+                        <div class="info">
+                            <p><strong>Marca/Modelo:</strong> ${osAtual.aparelho.marca} ${osAtual.aparelho.modelo}</p>
+                            ${osAtual.aparelho.imei ? `<p><strong>IMEI:</strong> ${osAtual.aparelho.imei}</p>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>DEFEITO RELATADO</h3>
+                        <div class="info">
+                            <p>${osAtual.defeitoRelatado}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>SERVIÇOS E VALORES</h3>
+                        <div class="info">
+                            <p>Mão de Obra: R$ ${(osAtual.valorMaoObra || 0).toFixed(2)}</p>
+                            ${osAtual.servicos ? osAtual.servicos.map(s => `<p>${s.descricao}: R$ ${s.valor.toFixed(2)}</p>`).join('') : ''}
+                            ${osAtual.pecas ? osAtual.pecas.map(p => `<p>${p.nome} (${p.quantidade}x): R$ ${(p.quantidade * p.preco).toFixed(2)}</p>`).join('') : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="total">
+                        TOTAL: R$ ${(osAtual.totalFinal || osAtual.valorMaoObra || 0).toFixed(2)}
+                    </div>
+                    
+                    <div class="section">
+                        <p><strong>Garantia:</strong> ${osAtual.garantiaDias} dias</p>
+                        <p><strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Funções de Clientes
+        function abrirModalNovoCliente() {
+            alert('Modal de Novo Cliente será implementado em breve!');
+        }
+
+        function atualizarListaClientes() {
+            // Implementar quando necessário
+        }
+
+        // Funções Financeiras
+        function adicionarTransacao() {
+            const tipo = document.getElementById('tipoTransacao').value;
+            const descricao = document.getElementById('descricaoTransacao').value;
+            const valor = parseFloat(document.getElementById('valorTransacao').value);
+            const data = document.getElementById('dataTransacao').value;
+            
+            if (!descricao || !valor || !data) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+            
+            const transacao = {
+                id: Date.now(),
+                tipo,
+                descricao,
+                valor,
+                data
+            };
+            
+            transacoes.push(transacao);
+            salvarDados();
+            atualizarListaTransacoes();
+            atualizarResumoFinanceiro();
+            atualizarDashboard();
+            limparFormularioTransacao();
+            
+            alert('Transação adicionada com sucesso!');
+        }
+
+        function atualizarListaTransacoes() {
+            const lista = document.getElementById('listaTransacoes');
+            const transacoesRecentes = transacoes.slice(-10).reverse();
+            
+            if (transacoesRecentes.length === 0) {
+                lista.innerHTML = '<p class="text-gray-500 text-center">Nenhuma transação registrada</p>';
+            } else {
+                lista.innerHTML = transacoesRecentes.map(transacao => `
+                    <div class="glass-effect p-4 rounded-xl card-hover">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-medium text-gray-800">${transacao.descricao}</p>
+                                <p class="text-xs text-gray-500">${new Date(transacao.data).toLocaleDateString('pt-BR')}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold ${transacao.tipo === 'receita' ? 'text-green-600' : 'text-red-600'}">
+                                    ${transacao.tipo === 'receita' ? '+' : '-'} R$ ${transacao.valor.toFixed(2)}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function atualizarResumoFinanceiro() {
+            const receitas = transacoes.filter(t => t.tipo === 'receita').reduce((sum, t) => sum + t.valor, 0);
+            const despesas = transacoes.filter(t => t.tipo === 'despesa').reduce((sum, t) => sum + t.valor, 0);
+            const saldo = receitas - despesas;
+            
+            document.getElementById('totalReceitas').textContent = `R$ ${receitas.toFixed(2)}`;
+            document.getElementById('totalDespesas').textContent = `R$ ${despesas.toFixed(2)}`;
+            document.getElementById('saldoTotal').textContent = `R$ ${saldo.toFixed(2)}`;
+        }
+
+        function limparFormularioTransacao() {
+            document.getElementById('descricaoTransacao').value = '';
+            document.getElementById('valorTransacao').value = '';
+        }
+
+        // Funções de persistência
+        function salvarDados() {
+            localStorage.setItem('galegoCell_vendas', JSON.stringify(vendas));
+            localStorage.setItem('galegoCell_produtos', JSON.stringify(produtos));
+            localStorage.setItem('galegoCell_ordensServico', JSON.stringify(ordensServico));
+            localStorage.setItem('galegoCell_clientes', JSON.stringify(clientes));
+            localStorage.setItem('galegoCell_transacoes', JSON.stringify(transacoes));
+        }
+
+        function carregarDados() {
+            const vendasSalvas = localStorage.getItem('galegoCell_vendas');
+            const produtosSalvos = localStorage.getItem('galegoCell_produtos');
+            const ossSalvas = localStorage.getItem('galegoCell_ordensServico');
+            const clientesSalvos = localStorage.getItem('galegoCell_clientes');
+            const transacoesSalvas = localStorage.getItem('galegoCell_transacoes');
+            
+            if (vendasSalvas) vendas = JSON.parse(vendasSalvas);
+            if (produtosSalvos) produtos = JSON.parse(produtosSalvos);
+            if (ossSalvas) ordensServico = JSON.parse(ossSalvas);
+            if (clientesSalvos) clientes = JSON.parse(clientesSalvos);
+            if (transacoesSalvas) transacoes = JSON.parse(transacoesSalvas);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971a53d13789cad0',t:'MTc1NTYxMzYwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
